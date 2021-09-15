@@ -1,0 +1,3 @@
+1.
+2.  Running time for pivot_months_pandas: 14.7 ms ± 377 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+    Running time for pivot_months_loops:  502 ms ± 4.81 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
