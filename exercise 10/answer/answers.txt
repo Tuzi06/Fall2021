@@ -1,0 +1,10 @@
+1. How long did your reddit_averages.py take with 
+(1) the reddit-0 data set and effectively no work,3.66s
+ (2) no schema specified and not caching (on reddit-2 for this and the rest), 6.073s
+(3) with a schema but not caching, 4.876s
+(4) with both a schema and caching the twice-used DataFrame?4.453s
+2. Based on the above, does it look like most of the time taken to process the reddit-2 data set is in reading the files, or calculating the averages?
+in reading the files. because with no work it take 3.66s. it taken most time in reading the files and calculating the averages
+
+3. Where did you use .cache() in your wikipedia_popular.py? [Hint: the answer had better be “once”… but where?]
+I use cache() in result1, it is store the maximun requested groupby date

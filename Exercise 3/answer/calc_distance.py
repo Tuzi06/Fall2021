@@ -1,0 +1,105 @@
+import sys
+import pandas as pd
+import numpy as np
+from pykalman import KalmanFilter
+
+def output_gpx(points, output_filename):
+    """
+    Output a GPX file with latitude and longitude from the points DataFrame.
+    """
+    from xml.dom.minidom import getDOMImplementation
+    def append_trkpt(pt, trkseg, doc):
+        trkpt = doc.createElement('trkpt')
+        trkpt.setAttribute('lat', '%.8f' % (pt['lat']))
+        trkpt.setAttribute('lon', '%.8f' % (pt['lon']))
+        trkseg.appendChild(trkpt)
+    
+    doc = getDOMImplementation().createDocument(None, 'gpx', None)
+    trk = doc.createElement('trk')
+    doc.documentElement.appendChild(trk)
+    trkseg = doc.createElement('trkseg')
+    trk.appendChild(trkseg)
+    
+    points.apply(append_trkpt, axis=1, trkseg=trkseg, doc=doc)
+    
+    with open(output_filename, 'w') as fh:
+        doc.writexml(fh, indent=' ')
+
+
+#Read the XML
+def get_data(filename):
+    from xml.dom.minidom import parse, parseString
+    GPS_df = pd.DataFrame(columns=['lat','lon'])
+    #GPS_df.lat=[1,3,4]
+    
+    file_parse =parse(filename)
+    #print(file_parse.nodeName)
+    #file_parse.firstChild.tagName
+    file_elem = file_parse.getElementsByTagName('trkpt')
+    for i in file_elem:
+        temp1=i.getAttribute('lat')
+        temp2=i.getAttribute('lon')
+        GPS_df = GPS_df.append(pd.Series([temp1, temp2], index=['lat', 'lon']), ignore_index=True)
+    
+    GPS_df['lat'] = GPS_df['lat'].values.astype(float)
+    GPS_df['lon'] = GPS_df['lon'].values.astype(float)
+    
+    return GPS_df
+    
+#  calculate distance
+#https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula/21623206
+
+def distance(data):
+    from math import radians, cos, sin, asin, sqrt, pi
+    R = 6371 # Radius of the earth in km
+    lat1=data['lat'].values.astype(float)
+    lon1=data['lon'].values.astype(float)
+    lat2 = data['lat'].shift(-1,fill_value=0)
+    lon2 = data['lon'].shift(-1,fill_value=0)
+    dLat = np.deg2rad(lat2 - lat1)
+    dLon = np.deg2rad(lon2 - lon1)
+    #a = np.sin(dLat/2) * np.sin(dLat/2)+np.cos(np.deg2rad(lat1)) * np.cos(np.deg2rad(lat2)) * np.sin(dLon/2) * np.sin(dLon/2)
+    x =0.5 -np.cos(dLat)/2+np.cos(np.deg2rad(lat1))* np.cos(np.deg2rad(lat2)) * (1-np.cos(dLon))/2
+    y = 2*R * np.arcsin(np.sqrt(x))
+    
+    arr_result = y[:-1]
+    result = np.sum(arr_result)*1000
+    
+    return(result)
+
+
+#  Kalman Filtering
+def smooth(points):
+    initial_state = points.iloc[0]
+    observation_covariance = np.diag([2/100000,2/100000]) ** 2
+    transition_covariance = np.diag([1/100000,1/100000]) ** 2
+    transition_matrix = [[1,0],[0,1]]
+    kf = KalmanFilter(initial_state_mean=initial_state, 
+                      initial_state_covariance=observation_covariance, 
+                      observation_covariance=observation_covariance, 
+                      transition_covariance=transition_covariance, 
+                      transition_matrices=transition_matrix)
+    
+    
+    x,y = kf.smooth(points)
+    arr = np.array(x)
+    data_frame = pd.DataFrame(arr, columns=['lat','lon'])
+    
+    return data_frame
+
+
+def main():
+    points = get_data(sys.argv[1])
+    print('Unfiltered distance: %0.2f' % (distance(points),))
+    
+    smoothed_points = smooth(points)
+    print('Filtered distance: %0.2f' % (distance(smoothed_points),))
+    output_gpx(smoothed_points, 'out.gpx')
+
+
+if __name__ == '__main__':
+    main()
+    
+    
+
+    

@@ -1,0 +1,9 @@
+1. In the hint above, what is the result of the calculation data['timestamp']*fit.slope + fit.intercept? What is the type, and describe the values.
+
+ the result of the calculation data['timestamp']*fit.slope + fit.intercept is data['prediction'], which is equivalent to the equation of a line, y = mx + b. this equation simplify the linear fit to Twitter ratings. y is the prediction of ratings. m is the slope, b is the intercept,and 'x' is data['timestamp']
+
+
+
+2. In the same hint, why does this produce a fit line on the graph? Why are the created_at values and timestamp values paired correctly to make points on the plot?
+
+because created_at and timestamp are different values for the same thing. Also, linregress uses timestamp (a float value) to calculate slope and intercept for the best fit

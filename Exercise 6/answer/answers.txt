@@ -1,0 +1,13 @@
+1. In the A/B test analysis, do you feel like we're p-hacking? How comfortable are you coming to a conclusion at ?
+
+for both chi-square and mann-whitney test, without remove the non-instructors, p>0.05, so I dont feel lakie we're p-hacking. After remove the non-instructors, for chi-square test we get p>0.05, but for mann-whitney test we get p<0.05, so I am not confident that we're p-hacking.
+
+2. If we had done T-tests between each pair of sorting implementation results, how many tests would we run? If we looked for  in them, what would the probability be of having any false conclusions, just by chance? That's the effective p-value of the many-T-tests analysis. [We could have done a Bonferroni correction when doing multiple T-tests, which is a fancy way of saying “for  tests, look for significance at ”.]
+
+If we had done T-tests between each pair of sorting implementation results, we need run 21 tests. effective alpha = 0.659, it is bad. done a Bonferroni correction p < 0.05/21 = 0.0024
+
+
+
+3. Give a ranking of the sorting implementations by speed, including which ones could not be distinguished. (i.e. which pairs could our experiment not conclude had different running times?)
+From fastest to slowest: partiton_sort, qs1, (qs4 or qs5), merge1, (qs3 or qs2)
+(qs4 or qs5) and (qs3 or qs2) are not distinguishable
