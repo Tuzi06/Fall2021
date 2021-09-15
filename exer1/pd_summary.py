@@ -2,7 +2,6 @@ import pandas as pd
 
 totals = pd.read_csv('totals.csv').set_index(keys=['name'])
 counts = pd.read_csv('counts.csv').set_index(keys=['name'])
-print (totals)
 
 total_city = totals.sum(1)
 print('City with lowest total precipitation:\n',total_city.idxmin())
