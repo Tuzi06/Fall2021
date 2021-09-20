@@ -17,5 +17,5 @@ print ('Average precipitation in each city:\n',total_part / totals_ob)
 
 total_reshape = np.reshape(totals,(4*len(totals),3))
 total_quad=np.sum(total_reshape,1)
-total_quad.shape=(len(totals),4)
+total_quad=np.reshape(total_quad,(len(totals),4))
 print('Quarterly precipitation totals:\n',total_quad)
