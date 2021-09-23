@@ -1,17 +1,22 @@
 import numpy as np
 import pandas as pd
-import re
+from scipy import stats
 
-dog_rates = pd.read_csv('dog_rates_tweets.csv',sep = ',',index_col =0)
-print(dog_rates['text'].dtype)
+dog_rates = pd.read_csv('dog_rates_tweets.csv',parse_dates=[1])
 
-dog_rates['text']=dog_rates['text'].astype(np.str_)
-print(dog_rates['text'].dtype)
+rate_data= dog_rates.text.str.extract(r'(\d+(\.\d+)?)/10')
+rate= rate_data[0].dropna()
 
-dog_rates['rating'] = re.match(r'(\d+(\.\d+)?)/10',dog_rates['text'])
+rate = pd.to_numeric(rate)
+rate = rate[rate<=25]
+dog_rates['rating']= rate
+data = dog_rates.loc[rate.index]
 
+def to_timestamp(d):
+    return d.timestamp()
 
+data['timestamp'] = data['created_at'].apply(to_timestamp)
 
-m = re.match(r"(\w+) (\w+)", "Isaac Newton, physicist")
-m=m.group(0)  
-print(m)
+fit = stats.linregress(data['timestamp'],data['rating'])
+data['prediction'] = data['timestamp']*fit.slope + fit.intercept
+
