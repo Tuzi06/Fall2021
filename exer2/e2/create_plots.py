@@ -6,14 +6,13 @@ import matplotlib.pyplot as plt
 filename1 = sys.argv[1]
 filename2 = sys.argv[2]
 
-file2 = pd.read_csv(filename2, sep=' ', header=None, index_col=1,names=['lang', 'page', 'views', 'bytes'])
 file1 = pd.read_csv(filename1, sep=' ', header=None, index_col=1,names=['lang', 'page', 'views', 'bytes'])
+file2 = pd.read_csv(filename2, sep=' ', header=None, index_col=1,names=['lang', 'page', 'views2', 'bytes'])
 
 sort1 = file1. sort_values(by='views',ascending = False)
 
-copy = file1.copy()
-copy['views2'] = file2['views'] 
-print(sort1)
+copy = pd.concat([file1,file2],axis=1)
+print(copy)
 
 plt.figure(figsize=(10, 5)) # change the size to something sensible
 plt.subplot(1, 2, 1) # subplots in 1 row, 2 columns, select the first
