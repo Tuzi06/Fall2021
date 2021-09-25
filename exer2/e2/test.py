@@ -19,4 +19,3 @@ data['timestamp'] = data['created_at'].apply(to_timestamp)
 
 fit = stats.linregress(data['timestamp'],data['rating'])
 data['prediction'] = data['timestamp']*fit.slope + fit.intercept
-

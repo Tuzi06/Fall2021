@@ -1,0 +1,4 @@
+1. The type of the reuslt is float64. The value of the result is the linear function of y =ax + b, where a is fit.slope, x is data['timestamp'], and b is it.intercept
+2. As we use to_timestamp() function for extract timestamp from created_at, which means timestamp presents created_at's value in another form. 
+So that using timestamp as the x value of the function "data['prediction'] = data['timestamp']*fit.slope + fit.intercept". It can prefectly fit in the x coordinate which uses 'created_at'
+And the equation is a linear function, which produce a fit line on the graph.
