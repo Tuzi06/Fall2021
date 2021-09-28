@@ -38,6 +38,24 @@ def distance(gps):
     return (sum(d[1:]))*1000
 
 def smooth(gps):
+    kalman_data = pd.DataFrame( gps['lat'].values.astype(float),columns=['lat'])
+    kalman_data['lon'] = gps['lon'].values.astype(float)
+    
+    initial_state = kalman_data.iloc[0]
+    observation_covariance = np.diag([2/10000, 2/10000]) ** 2 
+    transition_covariance = np.diag([1/10000, 1/10000]) ** 2 
+    transition = [[1,0],[0,1]] 
+
+
+    kf = KalmanFilter(initial_state_mean=initial_state,
+        initial_state_covariance=observation_covariance,
+        observation_covariance=observation_covariance,
+        transition_covariance=transition_covariance,
+        transition_matrices=transition)
+
+    kalman_smoothed, _ = kf.smooth(kalman_data)
+    smoothed = pd.DataFrame(kalman_smoothed, columns = ['lat','lon'])
+    return smoothed
     
 
 def output_gpx(points, output_filename):

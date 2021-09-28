@@ -11,12 +11,12 @@ def to_timestamp(d):
 
 cpu_data['timeData'] = pd.to_datetime(cpu_data['timestamp']).apply(to_timestamp)
 
-loess_smoothed = lowess(cpu_data['temperature'],cpu_data['timeData'],frac = 0.01)
+loess_smoothed = lowess(cpu_data['temperature'],cpu_data['timeData'],frac = 0.02)
 
 kalman_data = cpu_data[['temperature', 'cpu_percent', 'sys_load_1', 'fan_rpm']]
 initial_state = kalman_data.iloc[0]
 observation_covariance = np.diag([0.9, 0.9, 0.9, 0.9]) ** 2 # TODO: shouldn't be zero
-transition_covariance = np.diag([0.02, 0.02, 0.2, 0.02]) ** 2 # TODO: shouldn't be zero
+transition_covariance = np.diag([0.02, 0.02, 0.02, 0.02]) ** 2 # TODO: shouldn't be zero
 transition = [[0.97, 0.5, 0.2, -0.001], [0.1,0.4,2.2,0], [0,0,0.95,0], [0,0,0,1]] # TODO: shouldn't (all) be zero 
 
 
@@ -31,12 +31,10 @@ kalman_smoothed, _ = kf.smooth(kalman_data)
 
 plt.figure(figsize=(12, 4))
 
-plt.plot(cpu_data['timestamp'], cpu_data['temperature'], 'b.', alpha=0.5)
-plt.legend('temperature data')
-plt.plot(cpu_data['timestamp'], kalman_smoothed[:, 0], 'y-')
-plt.legend('alman_smooth')
-plt.plot(cpu_data['timestamp'], loess_smoothed[:, 1], 'r-')
-plt.legend('loess_smooth')
+plt.plot(cpu_data['timestamp'].values, cpu_data['temperature'].values, 'b.', alpha=0.5)
+plt.plot(cpu_data['timestamp'].values, kalman_smoothed[:, 0], 'g-')
+plt.plot(cpu_data['timestamp'].values, loess_smoothed[:, 1], 'r-')
+plt.legend(['data points','Kalman-smoothed line','LOESS-smoothed line'])
 
 plt.show() # maybe easier for testing
 plt.savefig('cpu.svg') # for final submission

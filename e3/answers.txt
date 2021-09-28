@@ -1,0 +1,7 @@
+1.  With the known of how the data can be and how the noise can be, the parameter of kalman filter can be set correctly. 
+    This means we can get our data much more closer to the real life one. Also, with some noises which are very closer to the actually data we want, kalman filter can be set as sensitivity as we want to filt out the noise.
+    So that, kalman is better when smoothing the CPU temperature for this exercise.
+
+2.  we may can use the product of timestamp and speed, which will be the distance we travel between each data points, and calulate sin or cos by using it and the course (angle) to get more acturate “next” latitude and longitude.
+    
+    
