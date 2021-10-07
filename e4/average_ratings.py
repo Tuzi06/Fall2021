@@ -23,6 +23,5 @@ output = output.rename(columns= {'true_title':'title'})
 output = movie_list.merge(output, on='title',how ='left')
 output['rating'] = output['rating'].round(2)
 output = output.fillna(0)
-print(output)
 
 output.to_csv(sys.argv[3],index = False)
