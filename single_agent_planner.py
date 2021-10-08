@@ -115,7 +115,7 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
     closed_list = dict()
     earliest_goal_timestep = 0
     h_value = h_values[start_loc]
-    root = {'loc': start_loc, 'g_val': 0, 'h_val': h_value, 'parent': None}
+    root = {'loc': start_loc, 'g_val': 0, 'h_val': h_value, 'parent': None, 'timestep': 0}
     push_node(open_list, root)
     closed_list[(root['loc'])] = root
     while len(open_list) > 0:
@@ -131,7 +131,9 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
             child = {'loc': child_loc,
                     'g_val': curr['g_val'] + 1,
                     'h_val': h_values[child_loc],
-                    'parent': curr}
+                    'parent': curr,
+                    'timestep':curr['timestep']+1
+                    }
             if (child['loc']) in closed_list:
                 existing_node = closed_list[(child['loc'])]
                 if compare_nodes(child, existing_node):
