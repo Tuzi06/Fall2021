@@ -27,12 +27,9 @@ def best_tmax(city, stations):
   
   
 city_data['best_tmax'] = city_data.apply(best_tmax, axis=1, stations=stations)
-plt.plot(city_data['best_tmax'].values, city_data['density'],'b.', alpha=0.5)
+plt.plot(city_data['best_tmax'].values, city_data['density'].values,'b.', alpha=0.5)
 plt.title('Temperature vs Population Density')
 plt.xlabel('Avg Max Temperature (\u00b0C)')
 plt.ylabel('Population Density (people/km\u00b2)')
-
-plt.show()
 plt.savefig(sys.argv[3])
-
-print(city_data)
+plt.show()
