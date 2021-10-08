@@ -33,4 +33,6 @@ plt.xlabel('Avg Max Temperature (\u00b0C)')
 plt.ylabel('Population Density (people/km\u00b2)')
 
 plt.show()
+plt.savefig(sys.argv[3])
+
 print(city_data)
