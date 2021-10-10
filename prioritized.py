@@ -28,9 +28,17 @@ class PrioritizedPlanningSolver(object):
 
         start_time = timer.time()
         result = []
-        constraints = []
+        constraints = [
+            # {'agent':0,
+            #  'loc':[(1,5)],
+            #  'timestep':4}
+            {'agent':0,
+             'loc':[(1,2),(1,3)],
+             'timestep':1}
+        ]
 
         for i in range(self.num_of_agents):  # Find path for each agent
+            print('asdfsf')
             path = a_star(self.my_map, self.starts[i], self.goals[i], self.heuristics[i],
                           i, constraints)
             if path is None:
