@@ -123,7 +123,7 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
     
     open_list = []
     closed_list = dict()
-    earliest_goal_timestep = 10
+    earliest_goal_timestep = 0
     h_value = h_values[start_loc]
     table = build_constraint_table(constraints,agent)
     root = {'loc': start_loc, 'g_val': 0, 'h_val': h_value, 'parent': None,'timestep':0}
@@ -136,8 +136,13 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
         # Task 1.4: Adjust the goal test condition to handle goal constraints
         # if curr['loc'] == goal_loc:
         #     return get_path(curr)
-        if curr['loc'] == goal_loc and curr['timestep']>earliest_goal_timestep:
-            return get_path(curr)
+        if curr['loc'] == goal_loc:
+            no_future_goalConstraint = True
+            for curr_cons in table:
+                if curr['timestep']< curr_cons['timestep'] and curr_cons['loc'] ==[goal_loc]:
+                    no_future_goalConstraint = False
+            if no_future_goalConstraint == True:
+                return get_path(curr)
 
         for dir in range(5):
 
