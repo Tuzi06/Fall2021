@@ -1,7 +1,7 @@
 import heapq
 
 def move(loc, dir):
-    directions = [(0, -1), (1, 0), (0, 1), (-1, 0)]
+    directions = [(0, -1), (1, 0), (0, 1), (-1, 0),(0,0)]
     return loc[0] + directions[dir][0], loc[1] + directions[dir][1]
 
 
@@ -86,11 +86,11 @@ def is_constrained(curr_loc, next_loc, next_time, constraint_table):
     #               any given constraint. For efficiency the constraints are indexed in a constraint_table
     #               by time step, see build_constraint_table.
     for timestep in constraint_table:
-        if len(timestep['loc']==1):
-            if next_loc ==timestep['loc'] and && next_time== timestep['time']:
+        if len(timestep['loc'])==1:
+            if [next_loc] ==timestep['loc'] and next_time == timestep['timestep']:
                 return True
         else:
-             if[crr_loc,next_loc]== timestep['loc'] and next_time== timestep['time']:
+            if[curr_loc,next_loc]== timestep['loc'] and next_time== timestep['timestep']:
                 return True
     return False    
     # pass
@@ -98,7 +98,6 @@ def is_constrained(curr_loc, next_loc, next_time, constraint_table):
 
 def push_node(open_list, node):
     heapq.heappush(open_list, (node['g_val'] + node['h_val'], node['h_val'], node['loc'], node))
-
 
 def pop_node(open_list):
     _, _, _, curr = heapq.heappop(open_list)
@@ -124,36 +123,44 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
     
     open_list = []
     closed_list = dict()
-    earliest_goal_timestep = 0
+    earliest_goal_timestep = 10
     h_value = h_values[start_loc]
     table = build_constraint_table(constraints,agent)
-    root = {'loc': start_loc, 'g_val': 0, 'h_val': h_value, 'parent': None, 'timestep': 0}
+    root = {'loc': start_loc, 'g_val': 0, 'h_val': h_value, 'parent': None,'timestep':0}
     push_node(open_list, root)
-    closed_list[(root['loc'],root['timestep'])] = (root,root['timestep'])
+    closed_list[(root['loc'],root['timestep'])] = root
     while len(open_list) > 0:
+        
         curr = pop_node(open_list)
         #############################
         # Task 1.4: Adjust the goal test condition to handle goal constraints
-        if curr['loc'] == goal_loc:
+        # if curr['loc'] == goal_loc:
+        #     return get_path(curr)
+        if curr['loc'] == goal_loc and curr['timestep']>earliest_goal_timestep:
             return get_path(curr)
-        for dir in range(4):
-            child_loc = move(curr['loc'], dir)
-            if is_constrained(curr['loc'],child_loc,):
+
+        for dir in range(5):
+
+            child_loc = move(curr['loc'], dir)     
+            
             if my_map[child_loc[0]][child_loc[1]]:
                 continue
+
+            if is_constrained(curr['loc'],child_loc,curr['timestep']+1,table):
+                continue
+            
             child = {'loc': child_loc,
                     'g_val': curr['g_val'] + 1,
                     'h_val': h_values[child_loc],
                     'parent': curr,
                     'timestep':curr['timestep']+1
                     }
-            if (child['loc']) in closed_list:
+            if (child['loc'],child['timestep']) in closed_list:
                 existing_node = closed_list[(child['loc'],child['timestep'])]
                 if compare_nodes(child, existing_node):
-                    closed_list[(child['loc'],child['timestep'])] = (child,child['timestep'])
+                    closed_list[(child['loc'],child['timestep'])] = child
                     push_node(open_list, child)
             else:
-                closed_list[(child['loc'],child['timestep'])] = (child,child['timestep'])
+                closed_list[(child['loc'],child['timestep'])] = child
                 push_node(open_list, child)
-
     return None  # Failed to find solutions

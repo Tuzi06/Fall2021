@@ -29,30 +29,67 @@ class PrioritizedPlanningSolver(object):
         start_time = timer.time()
         result = []
         constraints = [
+            # {'agent':1,
+            #  'loc':[(1,4)],
+            #  'timestep':3}
+            # # 1.2
             # {'agent':0,
             #  'loc':[(1,5)],
             #  'timestep':4}
-            {'agent':0,
-             'loc':[(1,2),(1,3)],
-             'timestep':1}
+            
+            # #1.3
+            # {'agent':1,
+            #  'loc':[(1,2),(1,3)],
+            #  'timestep':1}
+            
+            #1.4
+            #  {'agent': 0, 
+            #   'loc': [(1, 5)], 
+            #   'timestep': 10
+            #   }
+            
+            # 1.5
+            # {'agent':1,
+            #  'loc':[(1,3)],
+            #  'timestep':2
+            # },
+            # {'agent':1,
+            #  'loc':[(1,3),(1,2)],
+            #  'timestep':2
+            # },
+            # {'agent':1,
+            #  'loc':[(1,3),(1,4)],
+            #  'timestep':2
+            # },
         ]
-
+        print(self.starts)
+        upperbound = 0
         for i in range(self.num_of_agents):  # Find path for each agent
-            print('asdfsf')
             path = a_star(self.my_map, self.starts[i], self.goals[i], self.heuristics[i],
                           i, constraints)
             if path is None:
                 raise BaseException('No solutions')
             result.append(path)
-
+            upperbound = max(upperbound,len(path))
+            print(upperbound)
+                             
             ##############################
             # Task 2: Add constraints here
             #         Useful variables:
             #            * path contains the solution path of the current (i'th) agent, e.g., [(1,1),(1,2),(1,3)]
             #            * self.num_of_agents has the number of total agents
             #            * constraints: array of constraints to consider for future A* searches
-
-
+            #2.1
+            for j in range(self.num_of_agents-1):
+                curr_path = result[j]
+                for l in range(len(curr_path)-1):
+                    constraints.append({'agent':i+1,
+                                        'loc':[curr_path[l]],
+                                          'timestep':l})
+            #2.2&2.3
+                    constraints.append({'agent':i+1,
+                                        'loc':[curr_path[l],curr_path[l-1]],
+                                        'timestep':l})
             ##############################
 
         self.CPU_time = timer.time() - start_time
