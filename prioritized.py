@@ -25,7 +25,6 @@ class PrioritizedPlanningSolver(object):
 
     def find_solution(self):
         """ Finds paths for all agents from their start locations to their goal locations."""
-
         start_time = timer.time()
         result = []
         constraints = [
@@ -48,7 +47,11 @@ class PrioritizedPlanningSolver(object):
             #   'timestep': 10
             #   }
             
-            # # 1.5
+            # 1.5
+            # {'agent':1,
+            #  'loc':[(1,2)],
+            #  'timestep':1
+            # },
             # {'agent':1,
             #  'loc':[(1,3)],
             #  'timestep':2
@@ -61,8 +64,65 @@ class PrioritizedPlanningSolver(object):
             #  'loc':[(1,3),(1,4)],
             #  'timestep':2
             # },
+            
+            #2.4
+            # {'agent':1,
+            #  'loc':[(1,1)],
+            #  'timestep':1
+            # },
+            # {'agent':1,
+            #  'loc':[(1,2)],
+            #  'timestep':2
+            # },
+            # {'agent':1,
+            #  'loc':[(1,3)],
+            #  'timestep':3
+            # },
+            # {'agent':1,
+            #  'loc':[(1,2),(1,1)],
+            #  'timestep':2
+            # },
+            # {'agent':1,
+            #  'loc':[(1,3),(1,2)],
+            #  'timestep':3
+            # },
+            # {'agent':1,
+            #  'loc':[(1,3),(1,4)],
+            #  'timestep':3
+            # },
+            # {'agent':1,
+            #  'loc':[(1,3),(2,3)],
+            #  'timestep':3
+            # },
+            
+            
+            {'agent':0,
+             'loc':[(1,2)],
+             'timestep':1
+            },
+            {'agent':0,
+             'loc':[(1,3)],
+             'timestep':2
+            },
+            {'agent':0,
+             'loc':[(1,2),(1,1)],
+             'timestep':1
+            },
+            {'agent':0,
+             'loc':[(1,3),(1,2)],
+             'timestep':2
+            },
+            {'agent':0,
+             'loc':[(1,3),(1,4)],
+             'timestep':2
+            },
+            {'agent':0,
+             'loc':[(1,3),(2,3)],
+             'timestep':2
+            },
+            
+          
         ]
-        # print(self.starts)
         for i in range(self.num_of_agents):  # Find path for each agent
             path = a_star(self.my_map, self.starts[i], self.goals[i], self.heuristics[i],
                           i, constraints)
@@ -76,21 +136,34 @@ class PrioritizedPlanningSolver(object):
             #            * path contains the solution path of the current (i'th) agent, e.g., [(1,1),(1,2),(1,3)]
             #            * self.num_of_agents has the number of total agents
             #            * constraints: array of constraints to consider for future A* searches
-            #2.1
-            for j in range(self.num_of_agents-1):
-                curr_path = result[j]
-                # print(curr_path)
-                for l in range(len(curr_path)-1):
-                    constraints.append({'agent':i+1,
-                                        'loc':[curr_path[l]],
-                                        'timestep':l})
-
-            # 2.2                 
-                    
-            # # 2.3
+            # upperbound = len(result[0])
+            # #2.1
+            # for j in range(i+1,self.num_of_agents):
+            #     for l in range(len(path)):
+            #         constraints.append({'agent':j,
+            #                             'loc':[path[l]],
+            #                             'timestep':l})
+            # # 2.2                 
+            #         constraints.append({'agent':i+1,
+            #                             'loc':[path[l],path[l-1]],
+            #                             'timestep':l})
+            #     if()
+            # # 2.3   
             #     while True:
+            #         next_path =a_star(self.my_map, self.starts[j], self.goals[j], self.heuristics[j], 
+            #                           j, constraints)
+            #         if path[-1] in next_path:
+            #             constraints.append({'agent':j,
+            #                                 'loc':[path[-2]],
+            #                                 'timestep':next_path.index(path[-1])})  
+            #             constraints.append({'agent':j,
+            #                                 'loc':[path[-1]],
+            #                                 'timestep':next_path.index(path[-1])})
+            #         else:
+            #             break
                     
-            ##############################
+            # #2.4
+            
 
         self.CPU_time = timer.time() - start_time
 
