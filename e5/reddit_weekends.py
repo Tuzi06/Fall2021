@@ -86,12 +86,11 @@ def main():
     reddit_counts = sys.argv[1]
     # ...
     weekdays,weekends = process(reddit_counts)
-    print(weekdays['comment_count'].mean())
-    print(weekends['comment_count'].mean())
     ttest_p,weekdays_p,weekends_p,levene_p = student_ttest(weekdays,weekends)
     trans_weekdays_p, trans_weekends_p,trans_levene_p = fix1(weekdays,weekends)
     weekly_ttest_p, weekly_weekdays_p,weekly_weekends_p, weekly_levene_p = fix2(weekdays,weekends)
     utest_p = fix3(weekdays,weekends)
+    
     print(OUTPUT_TEMPLATE.format(
         initial_ttest_p=ttest_p,
         initial_weekday_normality_p=weekdays_p,
