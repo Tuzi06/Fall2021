@@ -16,7 +16,7 @@ loess_smoothed = lowess(cpu_data['temperature'],cpu_data['timeData'],frac = 0.02
 kalman_data = cpu_data[['temperature', 'cpu_percent', 'sys_load_1', 'fan_rpm']]
 initial_state = kalman_data.iloc[0]
 observation_covariance = np.diag([0.9, 0.9, 0.9, 0.9]) ** 2 # TODO: shouldn't be zero
-transition_covariance = np.diag([0.005, 0.005, 0.005, 0.005]) ** 2 # TODO: shouldn't be zero
+transition_covariance = np.diag([0.1, 0.1, 0.1, 0.1]) ** 2 # TODO: shouldn't be zero
 transition = [[0.97, 0.5, 0.2, -0.001], [0.1,0.4,2.2,0], [0,0,0.95,0], [0,0,0,1]] # TODO: shouldn't (all) be zero 
 
 
@@ -36,5 +36,5 @@ plt.plot(cpu_data['timestamp'].values, kalman_smoothed[:, 0], 'g-')
 plt.plot(cpu_data['timestamp'].values, loess_smoothed[:, 1], 'r-')
 plt.legend(['data points','Kalman-smoothed line','LOESS-smoothed line'])
 
-plt.show() # maybe easier for testing
+#plt.show() # maybe easier for testing
 plt.savefig('cpu.svg') # for final submission
