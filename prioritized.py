@@ -96,30 +96,30 @@ class PrioritizedPlanningSolver(object):
             # },
             
             
-            {'agent':0,
-             'loc':[(1,2)],
-             'timestep':1
-            },
-            {'agent':0,
-             'loc':[(1,3)],
-             'timestep':2
-            },
-            {'agent':0,
-             'loc':[(1,2),(1,1)],
-             'timestep':1
-            },
-            {'agent':0,
-             'loc':[(1,3),(1,2)],
-             'timestep':2
-            },
-            {'agent':0,
-             'loc':[(1,3),(1,4)],
-             'timestep':2
-            },
-            {'agent':0,
-             'loc':[(1,3),(2,3)],
-             'timestep':2
-            },
+            # {'agent':0,
+            #  'loc':[(1,2)],
+            #  'timestep':1
+            # },
+            # {'agent':0,
+            #  'loc':[(1,3)],
+            #  'timestep':2
+            # },
+            # {'agent':0,
+            #  'loc':[(1,2),(1,1)],
+            #  'timestep':1
+            # },
+            # {'agent':0,
+            #  'loc':[(1,3),(1,2)],
+            #  'timestep':2
+            # },
+            # {'agent':0,
+            #  'loc':[(1,3),(1,4)],
+            #  'timestep':2
+            # },
+            # {'agent':0,
+            #  'loc':[(1,3),(2,3)],
+            #  'timestep':2
+            # },
             
           
         ]
@@ -137,32 +137,37 @@ class PrioritizedPlanningSolver(object):
             #            * self.num_of_agents has the number of total agents
             #            * constraints: array of constraints to consider for future A* searches
             # upperbound = len(result[0])
-            # #2.1
-            # for j in range(i+1,self.num_of_agents):
-            #     for l in range(len(path)):
-            #         constraints.append({'agent':j,
-            #                             'loc':[path[l]],
-            #                             'timestep':l})
-            # # 2.2                 
-            #         constraints.append({'agent':i+1,
-            #                             'loc':[path[l],path[l-1]],
-            #                             'timestep':l})
-            #     if()
-            # # 2.3   
-            #     while True:
-            #         next_path =a_star(self.my_map, self.starts[j], self.goals[j], self.heuristics[j], 
-            #                           j, constraints)
-            #         if path[-1] in next_path:
-            #             constraints.append({'agent':j,
-            #                                 'loc':[path[-2]],
-            #                                 'timestep':next_path.index(path[-1])})  
-            #             constraints.append({'agent':j,
-            #                                 'loc':[path[-1]],
-            #                                 'timestep':next_path.index(path[-1])})
-            #         else:
-            #             break
+            #2.1
+            for j in range(i+1,self.num_of_agents):
+                for l in range(len(path)):
+                    constraints.append({'agent':j,
+                                        'loc':[path[l]],
+                                        'timestep':l})
+            # 2.2                 
+                    constraints.append({'agent':i+1,
+                                        'loc':[path[l],path[l-1]],
+                                        'timestep':l})
+            # 2.3   
+                #2.4
+                upperbound = 3
+                while True:
+                    next_path =a_star(self.my_map, self.starts[j], self.goals[j], self.heuristics[j], 
+                                      j, constraints)
+                    if path[-1] in next_path:
+                        #2.4
+                        if len(next_path) < upperbound:
+                            constraints.append({'agent':j,
+                                                'loc':[path[-2]],
+                                                'timestep':next_path.index(path[-1])})  
+                            constraints.append({'agent':j,
+                                                'loc':[path[-1]],
+                                                'timestep':next_path.index(path[-1])})
+                        else:
+                            raise BaseException('No solutions')
+                        
+                    else:
+                        break
                     
-            # #2.4
             
 
         self.CPU_time = timer.time() - start_time
