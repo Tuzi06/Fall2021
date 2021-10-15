@@ -134,8 +134,6 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
         curr = pop_node(open_list)
         #############################
         # Task 1.4: Adjust the goal test condition to handle goal constraints
-        # if curr['loc'] == goal_loc:
-        #     return get_path(curr)
         if curr['loc'] == goal_loc:
             no_future_goalConstraint = True
             for curr_cons in table:

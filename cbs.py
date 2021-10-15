@@ -18,9 +18,9 @@ def detect_collision(path1, path2):
         loc1 = get_location(path1,t+1)
         loc2 = get_location(path2,t+1)
         if loc1 == loc2:
-            return [loc1],t+1
+            return [loc1],t
         if[loc_c1,loc1] ==[loc2,loc_c2]:
-            return [loc_c1,loc1],(t+1)
+            return [loc_c1,loc1],t
     return None
     pass
 
@@ -37,7 +37,7 @@ def detect_collisions(paths):
         collisions.append({'a1':i,
                           'a2':i+1,
                           'loc':position,
-                          'timestep':t})
+                          'timestep':t+1})
     return collisions
 
     # pass
@@ -189,19 +189,24 @@ class CBSSolver(object):
             p = self.pop_node()
             if p['collisions'] == []:
                 return p['paths']
-            collision = p['collisions'][0]
+            collision = p['collisions'].pop(0)
             constraints = standard_splitting(collision)
             for constraint in constraints:
+                print('sdfdfadf     ',constraint)
                 q = {'cost':0,
-                     'constraints': p['constraints'] | constraint,
+                     'constraints': p['constraints']+[constraint],
                      'paths':p['paths'],
+                     'collisions':[]
                 }
                 ai = constraint['agent']
-                path = a_star(ai,q['constraints'])
+                path = a_star(self.my_map,self.starts[ai], self.goals[ai],self.heuristics[ai],ai,q['constraints'])
                 if len(path)>0:
-                    
+                    print('qpath ',path)
+                    q['paths'][ai] =path
+                    q['collsions'] = detect_collisions(q['paths'])
+                    q['cost'] = get_sum_of_cost(q['paths'])
+                    self.push_node(q)
         
-
         self.print_results(root)
         return root['paths']
 
