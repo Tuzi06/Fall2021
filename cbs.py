@@ -193,10 +193,13 @@ class CBSSolver(object):
             constraints = standard_splitting(collision)
             for constraint in constraints:
                 q = {'cost':0,
-                     'constraint': p['constraints'],
+                     'constraints': p['constraints'] | constraint,
                      'paths':p['paths'],
                 }
-                print(constraint)
+                ai = constraint['agent']
+                path = a_star(ai,q['constraints'])
+                if len(path)>0:
+                    
         
 
         self.print_results(root)
