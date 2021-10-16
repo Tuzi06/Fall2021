@@ -1,7 +1,7 @@
 import heapq
 
 def move(loc, dir):
-    directions = [(0, 0), (0, -1), (1, 0), (0, 1), (-1, 0)]
+    directions = [(0, -1), (1, 0), (0, 1), (-1, 0), (0, 0)]
     return loc[0] + directions[dir][0], loc[1] + directions[dir][1]
 
 
@@ -144,13 +144,20 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
 
         for dir in range(5):
 
-            child_loc = move(curr['loc'], dir)     
-            
+            child_loc = move(curr['loc'], dir)
+            # print('child loc',child_loc)    
+            # print(len(my_map))
+            # print(len(my_map[0]))
+            if child_loc[0]<0 or child_loc[0]>= len(my_map) or child_loc[1]<0 or child_loc[1]>=len(my_map[0]):
+                continue
             if my_map[child_loc[0]][child_loc[1]]:
                 continue
             if is_constrained(curr['loc'],child_loc,curr['timestep']+1,table):
                 continue
             
+            # if child_loc not in my_map:
+            #     print(child_loc,'not in')
+            #     continue
             child = {'loc': child_loc,
                     'g_val': curr['g_val'] + 1,
                     'h_val': h_values[child_loc],

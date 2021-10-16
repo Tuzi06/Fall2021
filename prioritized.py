@@ -148,22 +148,19 @@ class PrioritizedPlanningSolver(object):
                                         'loc':[path[l],path[l-1]],
                                         'timestep':l})
             # 2.3   
-                #2.4
-                upperbound = 3
+                
                 while True:
                     next_path =a_star(self.my_map, self.starts[j], self.goals[j], self.heuristics[j], 
                                       j, constraints)
                     if path[-1] in next_path:
-                        #2.4
-                        if len(next_path) < upperbound:
-                            constraints.append({'agent':j,
-                                                'loc':[path[-2]],
-                                                'timestep':next_path.index(path[-1])})  
-                            constraints.append({'agent':j,
-                                                'loc':[path[-1]],
-                                                'timestep':next_path.index(path[-1])})
-                        else:
-                            raise BaseException('No solutions')
+        
+                        constraints.append({'agent':j,
+                                            'loc':[path[-2]],
+                                            'timestep':next_path.index(path[-1])})  
+                        constraints.append({'agent':j,
+                                            'loc':[path[-1]],
+                                            'timestep':next_path.index(path[-1])})
+
                         
                     else:
                         break

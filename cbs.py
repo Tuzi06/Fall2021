@@ -33,11 +33,12 @@ def detect_collisions(paths):
     #           You should use your detect_collision function to find a collision between two robots.
     collisions =[]
     for i in range(len(paths)-1):
-        position,t = detect_collision(paths[i],paths[i+1])
-        collisions.append({'a1':i,
-                          'a2':i+1,
-                          'loc':position,
-                          'timestep':t+1})
+        if detect_collision(paths[i],paths[i+1]) !=None:
+            position,t = detect_collision(paths[i],paths[i+1])
+            collisions.append({'a1':i,
+                            'a2':i+1,
+                            'loc':position,
+                            'timestep':t+1})
     return collisions
 
     # pass
@@ -142,6 +143,42 @@ class CBSSolver(object):
         self.num_of_expanded += 1
         return node
 
+    class CBSSolver(object):
+        """The high-level search of CBS."""
+
+    def __init__(self, my_map, starts, goals):
+        """my_map   - list of lists specifying obstacle positions
+        starts      - [(x1, y1), (x2, y2), ...] list of start locations
+        goals       - [(x1, y1), (x2, y2), ...] list of goal locations
+        """
+
+        self.my_map = my_map
+        self.starts = starts
+        self.goals = goals
+        self.num_of_agents = len(goals)
+
+        self.num_of_generated = 0
+        self.num_of_expanded = 0
+        self.CPU_time = 0
+
+        self.open_list = []
+
+        # compute heuristics for the low-level search
+        self.heuristics = []
+        for goal in self.goals:
+            self.heuristics.append(compute_heuristics(my_map, goal))
+
+    def push_node(self, node):
+        heapq.heappush(self.open_list, (node['cost'], len(node['collisions']), self.num_of_generated, node))
+        print("Generate node {}".format(self.num_of_generated))
+        self.num_of_generated += 1
+
+    def pop_node(self):
+        _, _, id, node = heapq.heappop(self.open_list)
+        print("Expand node {}".format(id))
+        self.num_of_expanded += 1
+        return node
+
     def find_solution(self, disjoint=True):
         """ Finds paths for all agents from their start locations to their goal locations
 
@@ -177,6 +214,7 @@ class CBSSolver(object):
         for collision in root['collisions']:
             print(standard_splitting(collision))
 
+
         ##############################
         # Task 3.3: High-Level Search
         #           Repeat the following as long as the open list is not empty:
@@ -192,21 +230,24 @@ class CBSSolver(object):
             collision = p['collisions'].pop(0)
             constraints = standard_splitting(collision)
             for constraint in constraints:
-                print('sdfdfadf     ',constraint)
                 q = {'cost':0,
-                     'constraints': p['constraints']+[constraint],
-                     'paths':p['paths'],
+                     'constraints': [constraint]+p['constraints'],
+                     'paths':[],
                      'collisions':[]
                 }
+                for pa in p['paths']:
+                    q['paths'].append(pa)
+                
                 ai = constraint['agent']
+                print(ai)
                 path = a_star(self.my_map,self.starts[ai], self.goals[ai],self.heuristics[ai],ai,q['constraints'])
                 if len(path)>0:
-                    print('qpath ',path)
                     q['paths'][ai] =path
-                    q['collsions'] = detect_collisions(q['paths'])
+                    q['collisions'] = detect_collisions(q['paths'])
                     q['cost'] = get_sum_of_cost(q['paths'])
                     self.push_node(q)
-        
+        return None
+    
         self.print_results(root)
         return root['paths']
 
