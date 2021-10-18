@@ -87,8 +87,47 @@ def disjoint_splitting(collision):
     #                          specified timestep, and the second constraint prevents the same agent to traverse the
     #                          specified edge at the specified timestep
     #           Choose the agent randomly
+    constraints = []
+    agent = random.randint(0,1)
+    a = 'a'+str(agent +1)
+    if len(collision['loc'])==1:
+        constraints.append({'agent':collision[a],
+                            'loc':collision['loc'],
+                            'timestep':collision['timestep'],
+                            'positive':True
+                            })
+        constraints.append({'agent':collision[a],
+                            'loc':collision['loc'],
+                            'timestep':collision['timestep'],
+                            'positive':False
+                            })
+    else:
+        if agent ==0:
+            constraints.append({'agent':collision[a],
+                                'loc':[collision['loc'][0],collision['loc'][1]],
+                                'timestep':collision['timestep'],
+                                'positive':True
+                                })
+            constraints.append({'agent':collision[a],
+                                'loc':[collision['loc'][0],collision['loc'][1]],
+                                'timestep':collision['timestep'],
+                                'positive':False
+                                })
+        else:
+            constraints.append({'agent':collision[a],
+                                'loc':[collision['loc'][1],collision['loc'][0]],
+                                'timestep':collision['timestep'],
+                                'positive':True
+                                })
+            constraints.append({'agent':collision[a],
+                                'loc':[collision['loc'][1],collision['loc'][0]],
+                                'timestep':collision['timestep'],
+                                'positive':False
+                                })
+    return constraints
 
-    pass
+
+    # pass
 
 def paths_violate_constraint(constraint, paths):
     assert constraint['positive'] is True
@@ -226,9 +265,11 @@ class CBSSolver(object):
         while len(self.open_list) > 0:
             p = self.pop_node()
             if p['collisions'] == []:
+                print(p['paths'])
                 return p['paths']
             collision = p['collisions'].pop(0)
-            constraints = standard_splitting(collision)
+            # constraints = standard_splitting(collision)
+            constraints = disjoint_splitting(collision)
             for constraint in constraints:
                 q = {'cost':0,
                      'constraints': [constraint]+p['constraints'],
@@ -239,13 +280,16 @@ class CBSSolver(object):
                     q['paths'].append(pa)
                 
                 ai = constraint['agent']
-                print(ai)
                 path = a_star(self.my_map,self.starts[ai], self.goals[ai],self.heuristics[ai],ai,q['constraints'])
                 if len(path)>0:
                     q['paths'][ai] =path
+                    if constraint['positive'] == True:
+                        if len(paths_violate_constraint(constraint,q['paths']))== 0:
+                            continue
                     q['collisions'] = detect_collisions(q['paths'])
                     q['cost'] = get_sum_of_cost(q['paths'])
                     self.push_node(q)
+                    
         return None
     
         self.print_results(root)
