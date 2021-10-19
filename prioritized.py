@@ -123,6 +123,8 @@ class PrioritizedPlanningSolver(object):
             
           
         ]
+        # 2.4
+        longest_path =0
         for i in range(self.num_of_agents):  # Find path for each agent
             path = a_star(self.my_map, self.starts[i], self.goals[i], self.heuristics[i],
                           i, constraints)
@@ -136,8 +138,11 @@ class PrioritizedPlanningSolver(object):
             #            * path contains the solution path of the current (i'th) agent, e.g., [(1,1),(1,2),(1,3)]
             #            * self.num_of_agents has the number of total agents
             #            * constraints: array of constraints to consider for future A* searches
-            # upperbound = len(result[0])
-            #2.1
+            
+            # 2.4
+            if len(path)>longest_path:
+                longest_path = len(path)
+            # 2.1
             for j in range(i+1,self.num_of_agents):
                 for l in range(len(path)):
                     constraints.append({'agent':j,
@@ -152,6 +157,17 @@ class PrioritizedPlanningSolver(object):
                 while True:
                     next_path =a_star(self.my_map, self.starts[j], self.goals[j], self.heuristics[j], 
                                       j, constraints)
+                    print(next_path)
+                    # 2.4
+                    
+                    # if len(next_path) > longest_path*4:
+                    #     raise BaseException('No solutions')
+                    for i in range(longest_path-1,len(next_path)-1):
+                        for j in range(longest_path+1,len(next_path)-1):
+                            if next_path[i] == next_path[j] and next_path[i+1] == next_path[j+1]:
+                                raise BaseException('No solutions')
+                        
+                    #    
                     if path[-1] in next_path:
         
                         constraints.append({'agent':j,
