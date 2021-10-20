@@ -17,12 +17,17 @@ def detect_collision(path1, path2):
         loc_c2 = get_location(path2,t)
         loc1 = get_location(path1,t+1)
         loc2 = get_location(path2,t+1)
+        # print([loc_c1,loc1],'     ',[loc2,loc_c2])
         if loc1 == loc2:
+            # print('vertex collision',[loc1])
             return [loc1],t
         if[loc_c1,loc1] ==[loc2,loc_c2]:
+            # print('edge collision',[loc_c1,loc1])
             return [loc_c1,loc1],t
+        
+       
     return None
-    pass
+    # pass
 
 
 def detect_collisions(paths):
@@ -33,12 +38,13 @@ def detect_collisions(paths):
     #           You should use your detect_collision function to find a collision between two robots.
     collisions =[]
     for i in range(len(paths)-1):
-        if detect_collision(paths[i],paths[i+1]) !=None:
-            position,t = detect_collision(paths[i],paths[i+1])
-            collisions.append({'a1':i,
-                            'a2':i+1,
-                            'loc':position,
-                            'timestep':t+1})
+        for j in range(i+1,len(paths)):
+            if detect_collision(paths[i],paths[j]) !=None:
+                position,t = detect_collision(paths[i],paths[j])
+                collisions.append({'a1':i,
+                                'a2':j,
+                                'loc':position,
+                                'timestep':t+1})
     return collisions
 
     # pass
@@ -209,12 +215,12 @@ class CBSSolver(object):
 
     def push_node(self, node):
         heapq.heappush(self.open_list, (node['cost'], len(node['collisions']), self.num_of_generated, node))
-        print("Generate node {}".format(self.num_of_generated))
+        # print("Generate node {}".format(self.num_of_generated))
         self.num_of_generated += 1
 
     def pop_node(self):
         _, _, id, node = heapq.heappop(self.open_list)
-        print("Expand node {}".format(id))
+        # print("Expand node {}".format(id))
         self.num_of_expanded += 1
         return node
 
@@ -265,7 +271,7 @@ class CBSSolver(object):
         while len(self.open_list) > 0:
             p = self.pop_node()
             if p['collisions'] == []:
-                print(p['paths'])
+                # print(p['paths'])
                 return p['paths']
             collision = p['collisions'].pop(0)
             constraints = standard_splitting(collision)
@@ -277,7 +283,7 @@ class CBSSolver(object):
                      'collisions':[]
                 }
                 if constraint not in q['constraints']:
-                    q['constraints'] += [constraint]
+                    q['constraints'].append(constraint)
                 for pa in p['paths']:
                     q['paths'].append(pa)
                 
