@@ -268,14 +268,16 @@ class CBSSolver(object):
                 print(p['paths'])
                 return p['paths']
             collision = p['collisions'].pop(0)
-            # constraints = standard_splitting(collision)
-            constraints = disjoint_splitting(collision)
+            constraints = standard_splitting(collision)
+            # constraints = disjoint_splitting(collision)
             for constraint in constraints:
                 q = {'cost':0,
-                     'constraints': [constraint]+p['constraints'],
+                     'constraints': p['constraints'],
                      'paths':[],
                      'collisions':[]
                 }
+                if constraint not in q['constraints']:
+                    q['constraints'] += [constraint]
                 for pa in p['paths']:
                     q['paths'].append(pa)
                 
@@ -283,9 +285,9 @@ class CBSSolver(object):
                 path = a_star(self.my_map,self.starts[ai], self.goals[ai],self.heuristics[ai],ai,q['constraints'])
                 if len(path)>0:
                     q['paths'][ai] =path
-                    if constraint['positive'] == True:
-                        if len(paths_violate_constraint(constraint,q['paths']))== 0:
-                            continue
+                    # if constraint['positive'] == True:
+                    #     if len(paths_violate_constraint(constraint,q['paths']))== 0:
+                    #         continue
                     q['collisions'] = detect_collisions(q['paths'])
                     q['cost'] = get_sum_of_cost(q['paths'])
                     self.push_node(q)
