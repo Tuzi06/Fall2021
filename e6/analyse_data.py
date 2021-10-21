@@ -13,4 +13,3 @@ posthoc = pairwise_tukeyhsd(melt['value'],melt['variable'],alpha =0.05)
 # print(posthoc)
 
 fig = posthoc.plot_simultaneous()
-fig
