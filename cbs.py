@@ -17,12 +17,9 @@ def detect_collision(path1, path2):
         loc_c2 = get_location(path2,t)
         loc1 = get_location(path1,t+1)
         loc2 = get_location(path2,t+1)
-        # print([loc_c1,loc1],'     ',[loc2,loc_c2])
         if loc1 == loc2:
-            # print('vertex collision',[loc1])
             return [loc1],t
         if[loc_c1,loc1] ==[loc2,loc_c2]:
-            # print('edge collision',[loc_c1,loc1])
             return [loc_c1,loc1],t
         
        
@@ -215,12 +212,12 @@ class CBSSolver(object):
 
     def push_node(self, node):
         heapq.heappush(self.open_list, (node['cost'], len(node['collisions']), self.num_of_generated, node))
-        # print("Generate node {}".format(self.num_of_generated))
+        print("Generate node {}".format(self.num_of_generated))
         self.num_of_generated += 1
 
     def pop_node(self):
         _, _, id, node = heapq.heappop(self.open_list)
-        # print("Expand node {}".format(id))
+        print("Expand node {}".format(id))
         self.num_of_expanded += 1
         return node
 
@@ -257,7 +254,8 @@ class CBSSolver(object):
 
         # Task 3.2: Testing
         for collision in root['collisions']:
-            print(standard_splitting(collision))
+            # print(standard_splitting(collision))
+            print(disjoint_splitting(collision))
 
 
         ##############################
@@ -268,22 +266,24 @@ class CBSSolver(object):
         #             3. Otherwise, choose the first collision and convert to a list of constraints (using your
         #                standard_splitting function). Add a new child node to your open list for each constraint
         #           Ensure to create a copy of any objects that your child nodes might inherit
+        
         while len(self.open_list) > 0:
             p = self.pop_node()
             if p['collisions'] == []:
-                # print(p['paths'])
+                print(p['paths'])
                 return p['paths']
-            collision = p['collisions'].pop(0)
-            constraints = standard_splitting(collision)
-            # constraints = disjoint_splitting(collision)
+            collision = p['collisions'][0]
+            # constraints = standard_splitting(collision)
+            constraints = disjoint_splitting(collision)
             for constraint in constraints:
                 q = {'cost':0,
-                     'constraints': p['constraints'],
+                     'constraints': [constraint],
                      'paths':[],
                      'collisions':[]
                 }
-                if constraint not in q['constraints']:
-                    q['constraints'].append(constraint)
+                for c in p['constraints']:
+                    if c not in q['constraints']:
+                        q['constraints'].append(c)
                 for pa in p['paths']:
                     q['paths'].append(pa)
                 
@@ -291,13 +291,12 @@ class CBSSolver(object):
                 path = a_star(self.my_map,self.starts[ai], self.goals[ai],self.heuristics[ai],ai,q['constraints'])
                 if len(path)>0:
                     q['paths'][ai] =path
-                    # if constraint['positive'] == True:
-                    #     if len(paths_violate_constraint(constraint,q['paths']))== 0:
-                    #         continue
+                    if constraint['positive'] == True:
+                        if len(paths_violate_constraint(constraint,q['paths']))== 0:
+                            continue
                     q['collisions'] = detect_collisions(q['paths'])
                     q['cost'] = get_sum_of_cost(q['paths'])
-                    self.push_node(q)
-                    
+                    self.push_node(q)     
         return None
     
         self.print_results(root)
