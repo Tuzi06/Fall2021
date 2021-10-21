@@ -33,7 +33,6 @@ def main():
     mannwhiteneyu1 =2* stats.mannwhitneyu(old['search_count'],new['search_count']).pvalue
 
     #instructor only
-    print(search)
     instructors = search[search['is_instructor'] == True]
     
     new = instructors[instructors['uid']%2 ==1]

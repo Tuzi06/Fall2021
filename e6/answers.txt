@@ -1,0 +1,6 @@
+1.  As mostly p-value are greater than 0.05, we can reject the null hypothsis.We are not p-hacking.
+
+2.  For doing T-test between each pairs we need 21 test to cover all pairs.
+    If we do those 21 tests, the effective alpha will be 0.659. so that we should look at alpha/m=0.05/21 = 0.00238
+
+3.  From slowest to highest: qs3 or qs2 ,qs1, qs4 or qs5 or rmerge1, partition sort. As qs3 and qs2 has overlap with each other, same as qs4 and qs5 and merge1. We can not define which is faster one in those two pairs.
