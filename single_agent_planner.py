@@ -85,32 +85,32 @@ def is_constrained(curr_loc, next_loc, next_time, constraint_table):
     # Task 1.2/1.3: Check if a move from curr_loc to next_loc at time step next_time violates
     #               any given constraint. For efficiency the constraints are indexed in a constraint_table
     #               by time step, see build_constraint_table.
-    for timestep in constraint_table:
-        if len(timestep['loc'])==1:
-            if [next_loc] ==timestep['loc'] and next_time == timestep['timestep']:
-                if timestep['positive'] ==True:
-                    return 1
-                else:
-                    return 0
-                
-        else:
-            if[curr_loc,next_loc]== timestep['loc'] and next_time== timestep['timestep']:
-                if timestep['positive'] ==True:
-                    return 1
-                else:
-                    return 0
-                
-                
-                
     # for timestep in constraint_table:
     #     if len(timestep['loc'])==1:
     #         if [next_loc] ==timestep['loc'] and next_time == timestep['timestep']:
-    #             return True
-            
+    #             if timestep['positive'] ==True:
+    #                 return 1
+    #             else:
+    #                 return 0
+                
     #     else:
     #         if[curr_loc,next_loc]== timestep['loc'] and next_time== timestep['timestep']:
-    #             return True
-    # return False  
+    #             if timestep['positive'] ==True:
+    #                 return 1
+    #             else:
+    #                 return 0
+                
+                
+                
+    for timestep in constraint_table:
+        if len(timestep['loc'])==1:
+            if [next_loc] ==timestep['loc'] and next_time == timestep['timestep']:
+                return True
+            
+        else:
+            if[curr_loc,next_loc]== timestep['loc'] and next_time== timestep['timestep']:
+                return True
+    return False  
     # pass
 
 
@@ -172,18 +172,18 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
                     'parent': curr,
                     'timestep':curr['timestep']+1
                     }         
-            if is_constrained(curr['loc'],child_loc,curr['timestep']+1,table)==1:
-                if (child['loc'],child['timestep']) in closed_list:
-                    existing_node = closed_list[(child['loc'],child['timestep'])]
-                    if compare_nodes(child, existing_node):
-                        closed_list[(child['loc'],child['timestep'])] = child
-                        push_node(open_list, child)
-                    else:
-                        closed_list[(child['loc'],child['timestep'])] = child
-                        push_node(open_list, child)  
-                break
-            if is_constrained(curr['loc'],child_loc,curr['timestep']+1,table)==0:
-                continue
+            # if is_constrained(curr['loc'],child_loc,curr['timestep']+1,table)==1:
+            #     if (child['loc'],child['timestep']) in closed_list:
+            #         existing_node = closed_list[(child['loc'],child['timestep'])]
+            #         if compare_nodes(child, existing_node):
+            #             closed_list[(child['loc'],child['timestep'])] = child
+            #             push_node(open_list, child)
+            #         else:
+            #             closed_list[(child['loc'],child['timestep'])] = child
+            #             push_node(open_list, child)  
+            #     break
+            # if is_constrained(curr['loc'],child_loc,curr['timestep']+1,table)==0:
+            #     continue
             
             if is_constrained(curr['loc'],child_loc,curr['timestep']+1,table):
                 continue
