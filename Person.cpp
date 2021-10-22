@@ -1,9 +1,17 @@
 #include "Person.h"
-#include <iostream>
 
 const char* Person::getAuthor(){
 
     return "Yizhong Wang";
+}
+
+Person::Person(Sex s, const std::string& name = ""){
+    
+}
+Person::~Person(){
+    this->mother->removeChild(this);
+    this->father->removeChild(this);
+    this->removeAllChildren();
 }
 
 bool Person::setFather(Person* father){

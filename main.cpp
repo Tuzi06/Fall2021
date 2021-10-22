@@ -1,9 +1,12 @@
-#include "Person.h"
 #include <iostream>
-
+#include "Person.h"
 using namespace std;
 
 
 int main(){
-    Person steve = new Person(sex:MALE, "steve");
+    Person steve(Person::MALE,"steve");
+    Person mary(Person::FEMALE,"mary");
+
+    // cout<<steve.setMother(&mary);
+    // cout<<steve.getMother()->name<<endl;
 }
