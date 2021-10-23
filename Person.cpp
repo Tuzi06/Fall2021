@@ -1,22 +1,22 @@
 #include "Person.h"
-
+#include <iostream>
 const char* Person::getAuthor(){
 
     return "Yizhong Wang";
 }
-
-Person::Person(Sex s, const std::string& name = ""){
-    
+Person::Person(Sex s, const std::string& n):sex(s),name(n){
+    this->father =nullptr;
+    this->mother = nullptr;
+    this->children = People();
 }
 Person::~Person(){
-    this->mother->removeChild(this);
-    this->father->removeChild(this);
-    this->removeAllChildren();
+//     this->mother->removeChild(this);
+//     this->father->removeChild(this);
+//     this->removeAllChildren();
 }
 
 bool Person::setFather(Person* father){
-    //set father as we get the information about the father, set the father and return true 
-    if(father!= NULL)
+    if(this->father!= nullptr)
         this->father->removeChild(this);
     this->father = father;
     return true;
@@ -24,10 +24,10 @@ bool Person::setFather(Person* father){
 
 
 bool Person::setMother(Person* mother){
-    //set mother as we get the information about the mother, set the mother and return true 
-    if(mother != NULL)
+    if(this->mother != nullptr)
         this->mother->removeChild(this);
     this->mother = mother;
+    mother->addChild(this);
     return true;
 }
 
@@ -41,6 +41,7 @@ bool Person::hasChild(const Person* child) const{
 }
 bool Person::addChild(Person* child){
     child->getFather()->removeChild(child);
+    child->getMother()->removeChild(child);
     child->setFather(this);
     this->children.push_back(child);
     return true;
@@ -48,14 +49,14 @@ bool Person::addChild(Person* child){
 }
 
 bool Person::removeChild(Person*child){
-    if (child != NULL){
-       for(int i =0; i<getNumChildren();i++){
-           if(this->getChild(i) == child) {
-               this->children.erase(this->children.begin()+i);
+    if (child != nullptr){
+        for(int i =0; i<getNumChildren();i++){
+            if(this->getChild(i) == child) {
+                this->children.erase(this->children.begin()+i);
            }
        }
-        child->setFather(NULL);
-        child->setMother(NULL);
+        child->setFather(nullptr);
+        child->setMother(nullptr);
         return true;
     }
     return false; 
@@ -69,12 +70,12 @@ void Person::removeAllChildren(){
 
 void Person::getAncestors(People& results)const{
     Person* current_person = this->getFather();
-    while(current_person != NULL){
+    while(current_person != nullptr){
         results.push_back(current_person);
         current_person = current_person->getFather();
     }
     current_person = this->getMother();
-    while(current_person != NULL){
+    while(current_person != nullptr){
         results.push_back(current_person);
         current_person = current_person->getMother();
     }
