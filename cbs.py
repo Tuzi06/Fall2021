@@ -177,12 +177,12 @@ class CBSSolver(object):
 
     def push_node(self, node):
         heapq.heappush(self.open_list, (node['cost'], len(node['collisions']), self.num_of_generated, node))
-        print("Generate node {}".format(self.num_of_generated))
+        # print("Generate node {}".format(self.num_of_generated))
         self.num_of_generated += 1
 
     def pop_node(self):
         _, _, id, node = heapq.heappop(self.open_list)
-        print("Expand node {}".format(id))
+        # print("Expand node {}".format(id))
         self.num_of_expanded += 1
         return node
 
@@ -214,13 +214,13 @@ class CBSSolver(object):
         root['collisions'] = detect_collisions(root['paths'])
         self.push_node(root)
 
-        # Task 3.1: Testing
-        print(root['collisions'])
+        # # Task 3.1: Testing
+        # print(root['collisions'])
 
-        # Task 3.2: Testing
-        for collision in root['collisions']:
-            # print(standard_splitting(collision))
-            print(disjoint_splitting(collision),'\n\n')
+        # # Task 3.2: Testing
+        # for collision in root['collisions']:
+        #     # print(standard_splitting(collision))
+        #     print(disjoint_splitting(collision),'\n\n')
 
 
         ##############################
@@ -235,9 +235,9 @@ class CBSSolver(object):
         while len(self.open_list) > 0:
             p = self.pop_node()
             if p['collisions'] == []:
-                print(p['paths'])
+                self.print_results(p)
                 return p['paths']
-            collision = p['collisions'].pop(0)
+            collision = p['collisions'][0]
             # constraints = standard_splitting(collision)
             constraints = disjoint_splitting(collision)
             for constraint in constraints:
@@ -257,18 +257,12 @@ class CBSSolver(object):
                 
                 if len(path)>0:
                     q['paths'][ai]= path
+                    # task 4
                     continue_flag = False
                     if constraint['positive'] == True:
                         vol = paths_violate_constraint(constraint,q['paths'])
                         for v in vol:
-                            cons_v = {'agent':v,
-                                'loc':constraint['loc'],
-                                'timestep':constraint['timestep'],
-                                'positive':False
-                                }
-                            if cons_v not in q['constraints']:
-                                q['constraints'].append(cons_v)
-                            
+                           
                             path_v = a_star(self.my_map,self.starts[v], self.goals[v],self.heuristics[v],v,q['constraints'])
                             if path_v  is None:
                                 continue_flag =True
@@ -277,13 +271,10 @@ class CBSSolver(object):
                     if continue_flag == True:
                         print('not generate this child')
                         continue
-                    print('other path are fine')
-                    q['paths'][ai] =path
                     q['collisions'] = detect_collisions(q['paths'])
                     q['cost'] = get_sum_of_cost(q['paths'])
                     self.push_node(q)     
         return None
-
         self.print_results(root)
         return root['paths']
 
