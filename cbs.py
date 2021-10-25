@@ -149,44 +149,9 @@ def paths_violate_constraint(constraint, paths):
                 rst.append(i)
     return rst
 
+
 class CBSSolver(object):
     """The high-level search of CBS."""
-
-    def __init__(self, my_map, starts, goals):
-        """my_map   - list of lists specifying obstacle positions
-        starts      - [(x1, y1), (x2, y2), ...] list of start locations
-        goals       - [(x1, y1), (x2, y2), ...] list of goal locations
-        """
-
-        self.my_map = my_map
-        self.starts = starts
-        self.goals = goals
-        self.num_of_agents = len(goals)
-
-        self.num_of_generated = 0
-        self.num_of_expanded = 0
-        self.CPU_time = 0
-
-        self.open_list = []
-
-        # compute heuristics for the low-level search
-        self.heuristics = []
-        for goal in self.goals:
-            self.heuristics.append(compute_heuristics(my_map, goal))
-
-    def push_node(self, node):
-        heapq.heappush(self.open_list, (node['cost'], len(node['collisions']), self.num_of_generated, node))
-        print("Generate node {}".format(self.num_of_generated))
-        self.num_of_generated += 1
-
-    def pop_node(self):
-        _, _, id, node = heapq.heappop(self.open_list)
-        print("Expand node {}".format(id))
-        self.num_of_expanded += 1
-        return node
-
-    class CBSSolver(object):
-        """The high-level search of CBS."""
 
     def __init__(self, my_map, starts, goals):
         """my_map   - list of lists specifying obstacle positions
@@ -255,7 +220,7 @@ class CBSSolver(object):
         # Task 3.2: Testing
         for collision in root['collisions']:
             # print(standard_splitting(collision))
-            print(disjoint_splitting(collision))
+            print(disjoint_splitting(collision),'\n\n')
 
 
         ##############################
@@ -272,14 +237,14 @@ class CBSSolver(object):
             if p['collisions'] == []:
                 print(p['paths'])
                 return p['paths']
-            collision = p['collisions'][0]
+            collision = p['collisions'].pop(0)
             # constraints = standard_splitting(collision)
             constraints = disjoint_splitting(collision)
             for constraint in constraints:
                 q = {'cost':0,
-                     'constraints': [constraint],
-                     'paths':[],
-                     'collisions':[]
+                    'constraints': [constraint],
+                    'paths':[],
+                    'collisions':[]
                 }
                 for c in p['constraints']:
                     if c not in q['constraints']:
@@ -289,16 +254,36 @@ class CBSSolver(object):
                 
                 ai = constraint['agent']
                 path = a_star(self.my_map,self.starts[ai], self.goals[ai],self.heuristics[ai],ai,q['constraints'])
+                
                 if len(path)>0:
-                    q['paths'][ai] =path
+                    q['paths'][ai]= path
+                    continue_flag = False
                     if constraint['positive'] == True:
-                        if len(paths_violate_constraint(constraint,q['paths']))== 0:
-                            continue
+                        vol = paths_violate_constraint(constraint,q['paths'])
+                        for v in vol:
+                            cons_v = {'agent':v,
+                                'loc':constraint['loc'],
+                                'timestep':constraint['timestep'],
+                                'positive':False
+                                }
+                            if cons_v not in q['constraints']:
+                                q['constraints'].append(cons_v)
+                            
+                            path_v = a_star(self.my_map,self.starts[v], self.goals[v],self.heuristics[v],v,q['constraints'])
+                            if path_v  is None:
+                                continue_flag =True
+                            else:
+                                q['paths'][v] = path_v
+                    if continue_flag == True:
+                        print('not generate this child')
+                        continue
+                    print('other path are fine')
+                    q['paths'][ai] =path
                     q['collisions'] = detect_collisions(q['paths'])
                     q['cost'] = get_sum_of_cost(q['paths'])
                     self.push_node(q)     
         return None
-    
+
         self.print_results(root)
         return root['paths']
 
