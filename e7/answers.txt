@@ -1,0 +1,2 @@
+1.  As the residual are quite normal and p-value are way smaller than 0.05, we can conclude that the ratings are increasing.
+2.  Yes, it seems that the kalman filter has a better capture of the true signal in the noise
