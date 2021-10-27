@@ -59,20 +59,21 @@ def build_constraint_table(constraints, agent):
             table.append(constraint)
         # task 4
         if constraint['agent'] != agent and constraint['positive'] ==True:
-            if len(constraint['loc']) ==1:
-                cons_i = {'agent':agent,
+            cons_i = {'agent':agent,
                         'loc':constraint['loc'],
                         'timestep':constraint['timestep'],
                         'positive':False
                         }
+            if cons_i not in table:
                 table.append(cons_i)
-            else:
+            if len(constraint['loc'])>1:
                 cons_i = {'agent':agent,
                         'loc':[constraint['loc'][1],constraint['loc'][0]],
                         'timestep':constraint['timestep'],
                         'positive':False
                         }
-                table.append(cons_i)
+                if cons_i not in table:
+                    table.append(cons_i)
     return table
     # pass
 
@@ -187,6 +188,10 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
                     'parent': curr,
                     'timestep':curr['timestep']+1
                     }     
+                if child_loc[0]<0 or child_loc[0]>= len(my_map) or child_loc[1]<0 or child_loc[1]>=len(my_map[0]):
+                    continue
+                if my_map[child_loc[0]][child_loc[1]]:
+                    continue
                 if (child['loc'],child['timestep']) in closed_list:
                     existing_node = closed_list[(child['loc'],child['timestep'])]
                     if compare_nodes(child, existing_node):

@@ -20,7 +20,7 @@ def detect_collision(path1, path2):
         if loc1 == loc2:
             return [loc1],t
         if[loc_c1,loc1] ==[loc2,loc_c2]:
-            return [loc_c1,loc1],t
+            return [loc2,loc_c2],t
         
        
     return None
@@ -214,13 +214,13 @@ class CBSSolver(object):
         root['collisions'] = detect_collisions(root['paths'])
         self.push_node(root)
 
-        # # Task 3.1: Testing
-        # print(root['collisions'])
+        # Task 3.1: Testing
+        print(root['collisions'])
 
-        # # Task 3.2: Testing
-        # for collision in root['collisions']:
-        #     # print(standard_splitting(collision))
-        #     print(disjoint_splitting(collision),'\n\n')
+        # Task 3.2: Testing
+        for collision in root['collisions']:
+            # print(standard_splitting(collision))
+            print(disjoint_splitting(collision),'\n\n')
 
 
         ##############################
@@ -237,7 +237,7 @@ class CBSSolver(object):
             if p['collisions'] == []:
                 self.print_results(p)
                 return p['paths']
-            collision = p['collisions'][0]
+            collision = p['collisions'].pop(0)
             # constraints = standard_splitting(collision)
             constraints = disjoint_splitting(collision)
             for constraint in constraints:
@@ -255,21 +255,23 @@ class CBSSolver(object):
                 ai = constraint['agent']
                 path = a_star(self.my_map,self.starts[ai], self.goals[ai],self.heuristics[ai],ai,q['constraints'])
                 
-                if len(path)>0:
+                if path is not None:
                     q['paths'][ai]= path
                     # task 4
                     continue_flag = False
-                    if constraint['positive'] == True:
+                    if constraint['positive']:
                         vol = paths_violate_constraint(constraint,q['paths'])
                         for v in vol:
-                            path_v = a_star(self.my_map,self.starts[v], self.goals[v],self.heuristics[v],v,q['constraints'])
-                            if path_v  is None:
-                                continue_flag =True
-                            else:
-                                q['paths'][v] = path_v
-                    if continue_flag == True:
-                        print('not generate this child')
-                        continue
+                            if v is not ai:
+                                path_v = a_star(self.my_map,self.starts[v], self.goals[v],self.heuristics[v],v,q['constraints'])
+                                if path_v  is None:
+                                    continue_flag =True
+                                    break
+                                else:
+                                    q['paths'][v] = path_v
+                        if continue_flag:
+                            print('not generate this child')
+                            continue
                     q['collisions'] = detect_collisions(q['paths'])
                     q['cost'] = get_sum_of_cost(q['paths'])
                     self.push_node(q)     
