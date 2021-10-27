@@ -28,9 +28,7 @@ class PrioritizedPlanningSolver(object):
         start_time = timer.time()
         result = []
         constraints = [
-            # {'agent':1,
-            #  'loc':[(1,4)],
-            #  'timestep':3}
+           
             # # 1.2
             # {'agent':0,
             #  'loc':[(1,5)],
@@ -48,22 +46,22 @@ class PrioritizedPlanningSolver(object):
             #   }
             
             # 1.5
-            # {'agent':1,
-            #  'loc':[(1,2)],
-            #  'timestep':1
-            # },
-            # {'agent':1,
-            #  'loc':[(1,3)],
-            #  'timestep':2
-            # },
-            # {'agent':1,
-            #  'loc':[(1,3),(1,2)],
-            #  'timestep':2
-            # },
-            # {'agent':1,
-            #  'loc':[(1,3),(1,4)],
-            #  'timestep':2
-            # },
+            {'agent':1,
+             'loc':[(1,2)],
+             'timestep':1
+            },
+            {'agent':1,
+             'loc':[(1,3)],
+             'timestep':2
+            },
+            {'agent':1,
+             'loc':[(1,3),(1,2)],
+             'timestep':2
+            },
+            {'agent':1,
+             'loc':[(1,3),(1,4)],
+             'timestep':2
+            },
             
             #2.4
             # {'agent':1,
@@ -124,8 +122,8 @@ class PrioritizedPlanningSolver(object):
           
         ]
         # 2.4
-        longest_path =0
-        meet_same_edge =3
+        # longest_path =0
+        # meet_same_edge =3
         for i in range(self.num_of_agents):  # Find path for each agent
             path = a_star(self.my_map, self.starts[i], self.goals[i], self.heuristics[i],
                           i, constraints)
@@ -141,48 +139,48 @@ class PrioritizedPlanningSolver(object):
             #            * constraints: array of constraints to consider for future A* searches
             
             # 2.4
-            if len(path)>longest_path:
-                longest_path = len(path)
-            # 2.1
-            for j in range(i+1,self.num_of_agents):
-                for l in range(len(path)):
-                    constraints.append({'agent':j,
-                                        'loc':[path[l]],
-                                        'timestep':l})
-            # 2.2                 
-                    constraints.append({'agent':i+1,
-                                        'loc':[path[l],path[l-1]],
-                                        'timestep':l})
-            # 2.3   
+            # if len(path)>longest_path:
+            #     longest_path = len(path)
+            # # 2.1
+            # for j in range(i+1,self.num_of_agents):
+            #     for l in range(len(path)):
+            #         constraints.append({'agent':j,
+            #                             'loc':[path[l]],
+            #                             'timestep':l})
+            # # 2.2                 
+            #         constraints.append({'agent':i+1,
+            #                             'loc':[path[l],path[l-1]],
+            #                             'timestep':l})
+            # # 2.3   
                 
-                while True:
-                    next_path =a_star(self.my_map, self.starts[j], self.goals[j], self.heuristics[j], 
-                                      j, constraints)
-                    print(next_path)
+            #     while True:
+            #         next_path =a_star(self.my_map, self.starts[j], self.goals[j], self.heuristics[j], 
+            #                           j, constraints)
+            #         print(next_path)
                     
-                    # 2.4
-                    # if len(next_path) > longest_path*4:
-                    #     raise BaseException('No solutions')
-                    meet =0
-                    for m in range(longest_path-1,len(next_path)-1):
-                        for n in range(longest_path+1,len(next_path)-1):
-                            if next_path[m] == next_path[n] and next_path[m+1] == next_path[n+1]:
-                                meet+=1
-                            if meet > meet_same_edge:
-                                raise BaseException('No solutions')
+            #         # 2.4
+            #         # if len(next_path) > longest_path*4:
+            #         #     raise BaseException('No solutions')
+            #         meet =0
+            #         for m in range(longest_path-1,len(next_path)-1):
+            #             for n in range(longest_path+1,len(next_path)-1):
+            #                 if next_path[m] == next_path[n] and next_path[m+1] == next_path[n+1]:
+            #                     meet+=1
+            #                 if meet > meet_same_edge:
+            #                     raise BaseException('No solutions')
                            
-                    if path[-1] in next_path:
+            #         if path[-1] in next_path:
         
-                        constraints.append({'agent':j,
-                                            'loc':[path[-2]],
-                                            'timestep':next_path.index(path[-1])})  
-                        constraints.append({'agent':j,
-                                            'loc':[path[-1]],
-                                            'timestep':next_path.index(path[-1])})
+            #             constraints.append({'agent':j,
+            #                                 'loc':[path[-2]],
+            #                                 'timestep':next_path.index(path[-1])})  
+            #             constraints.append({'agent':j,
+            #                                 'loc':[path[-1]],
+            #                                 'timestep':next_path.index(path[-1])})
 
                         
-                    else:
-                        break
+            #         else:
+            #             break
                     
             
 

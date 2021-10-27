@@ -262,13 +262,11 @@ class CBSSolver(object):
                     if constraint['positive']:
                         vol = paths_violate_constraint(constraint,q['paths'])
                         for v in vol:
-                            if v is not ai:
-                                path_v = a_star(self.my_map,self.starts[v], self.goals[v],self.heuristics[v],v,q['constraints'])
-                                if path_v  is None:
-                                    continue_flag =True
-                                    break
-                                else:
-                                    q['paths'][v] = path_v
+                            path_v = a_star(self.my_map,self.starts[v], self.goals[v],self.heuristics[v],v,q['constraints'])
+                            if path_v  is None:
+                                continue_flag =True
+                            else:
+                                q['paths'][v] = path_v
                         if continue_flag:
                             print('not generate this child')
                             continue

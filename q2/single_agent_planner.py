@@ -53,10 +53,14 @@ def build_constraint_table(constraints, agent):
     #               the given agent for each time step. The table can be used
     #               for a more efficient constraint violation check in the 
     #               is_constrained function.
-    table =[]
+    table =dict()
     for constraint in constraints:
         if constraint['agent'] == agent:
-            table.append(constraint)
+            if constraint['timestep'] not in table:
+                table[constraint['timestep']] = [constraint]
+            else:
+                table[constraint['timestep']].append(constraint)
+
     return table
     # pass
 
@@ -85,16 +89,16 @@ def is_constrained(curr_loc, next_loc, next_time, constraint_table):
     # Task 1.2/1.3: Check if a move from curr_loc to next_loc at time step next_time violates
     #               any given constraint. For efficiency the constraints are indexed in a constraint_table
     #               by time step, see build_constraint_table.
-                
-    for cons in constraint_table:
-        if len(cons['loc'])==1:
-            if [next_loc] ==cons['loc'] and next_time == cons['timestep']:
-                return True
-            
-        else:
-            if[curr_loc,next_loc]==cons['loc'] and next_time==cons['timestep']:
-                return True
-    return False  
+    if next_time in constraint_table:  
+        for constraint in constraint_table[next_time]:
+            if len(constraint['loc']) ==1:
+                if constraint['loc'] == [next_loc]:
+                    print('true')
+                    return True
+            else:
+                if constraint['loc'] ==[curr_loc,next_loc]:
+                    return True
+    return False     
     pass
 
 
@@ -133,15 +137,22 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
     closed_list[(root['loc'],root['timestep'])] = root
     while len(open_list) > 0:
         curr = pop_node(open_list)
+        # if curr['loc'] == goal_loc:
+        #     return get_path(curr)
         #############################
         # Task 1.4: Adjust the goal test condition to handle goal constraints
         if curr['loc'] == goal_loc:
             no_future_goalConstraint = True
-            for curr_cons in table:
-                if curr['timestep']< curr_cons['timestep'] and curr_cons['loc'] ==[goal_loc]:
-                    no_future_goalConstraint = False
-            if no_future_goalConstraint == True:
-                return get_path(curr)
+            if len(table)>0:
+                if curr['timestep']< list(table)[-1]:
+                    for cons in table[list(table)[-1]]:
+                        if cons['loc'] == [goal_loc]:
+                            no_future_goalConstraint=False
+                if no_future_goalConstraint == True:
+                    return get_path(curr)
+            else:
+                if no_future_goalConstraint == True:
+                    return get_path(curr)
             
         for dir in range(5):
             child_loc = move(curr['loc'], dir)
