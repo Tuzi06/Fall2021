@@ -268,7 +268,6 @@ class CBSSolver(object):
                             else:
                                 q['paths'][v] = path_v
                         if continue_flag:
-                            print('not generate this child')
                             continue
                     q['collisions'] = detect_collisions(q['paths'])
                     q['cost'] = get_sum_of_cost(q['paths'])

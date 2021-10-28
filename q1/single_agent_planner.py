@@ -93,7 +93,6 @@ def is_constrained(curr_loc, next_loc, next_time, constraint_table):
         for constraint in constraint_table[next_time]:
             if len(constraint['loc']) ==1:
                 if constraint['loc'] == [next_loc]:
-                    print('true')
                     return True
             else:
                 if constraint['loc'] ==[curr_loc,next_loc]:
@@ -143,16 +142,26 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
         # Task 1.4: Adjust the goal test condition to handle goal constraints
         if curr['loc'] == goal_loc:
             no_future_goalConstraint = True
-            if len(table)>0:
-                if curr['timestep']< list(table)[-1]:
-                    for cons in table[list(table)[-1]]:
+            for timestep in table:
+                if timestep >curr['timestep']:
+                    for cons in table[timestep]:
                         if cons['loc'] == [goal_loc]:
-                            no_future_goalConstraint=False
-                if no_future_goalConstraint == True:
-                    return get_path(curr)
-            else:
-                if no_future_goalConstraint == True:
-                    return get_path(curr)
+                            no_future_goalConstraint =False
+            if no_future_goalConstraint:
+                return get_path(curr)
+            
+            
+            
+            # if len(table)>0:
+            #     for timestep in range(curr['timestep'],list(table)[-1]):
+            #         for cons in table[timestep]:
+            #             if cons['loc'] == [goal_loc]:
+            #                 no_future_goalConstraint = False
+            #     if no_future_goalConstraint:
+            #         return get_path(curr)
+            # else:
+            #     if no_future_goalConstraint == True:
+            #         return get_path(curr)
             
         for dir in range(5):
             child_loc = move(curr['loc'], dir)

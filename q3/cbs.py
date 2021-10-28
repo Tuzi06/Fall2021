@@ -214,13 +214,12 @@ class CBSSolver(object):
         root['collisions'] = detect_collisions(root['paths'])
         self.push_node(root)
 
-        # # Task 3.1: Testing
-        # print(root['collisions'])
+        # Task 3.1: Testing
+        print(root['collisions'])
 
-        # # Task 3.2: Testing
-        # for collision in root['collisions']:
-        #     # print(standard_splitting(collision))
-        #     print(disjoint_splitting(collision),'\n\n')
+        # Task 3.2: Testing
+        for collision in root['collisions']:
+            print(standard_splitting(collision))
 
 
         ##############################
@@ -254,7 +253,7 @@ class CBSSolver(object):
                 ai = constraint['agent']
                 path = a_star(self.my_map,self.starts[ai], self.goals[ai],self.heuristics[ai],ai,q['constraints'])
                 
-                if len(path)>0:
+                if path is not None:
                     q['paths'][ai]= path
                     q['collisions'] = detect_collisions(q['paths'])
                     q['cost'] = get_sum_of_cost(q['paths'])
