@@ -18,7 +18,7 @@ def get_data(filename):
     
     
     # TODO: add the column that we want to predict: the temperatures from the *next* time step.
-    sysinfo[y_column] = sysinfo['temperature'].shift(-1) # should be the temperature value from the next row
+    sysinfo[y_column] = sysinfo['temperature'].shift(-1)# should be the temperature value from the next row
     sysinfo = sysinfo[sysinfo[y_column].notnull()] # the last row should have y_column null: no next temp known
     return sysinfo
 
@@ -95,7 +95,7 @@ def main(training_file, validation_file):
     output_regression(coefficients)
     smooth_test(coefficients, train, 'train.png')
 
-    #print("Training score: %g\nValidation score: %g" % (model.score(X_train, y_train), model.score(X_valid, y_valid)))
+    print("Training score: %g\nValidation score: %g" % (model.score(X_train, y_train), model.score(X_valid, y_valid)))
 
     plot_errors(model, X_valid, y_valid)
     smooth_test(coefficients, valid, 'valid.png')
