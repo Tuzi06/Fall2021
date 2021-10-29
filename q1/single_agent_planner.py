@@ -62,7 +62,7 @@ def build_constraint_table(constraints, agent):
                 table[constraint['timestep']].append(constraint)
 
     return table
-    # pass
+    pass
 
 
 def get_location(path, time):
@@ -149,20 +149,7 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
                             no_future_goalConstraint =False
             if no_future_goalConstraint:
                 return get_path(curr)
-            
-            
-            
-            # if len(table)>0:
-            #     for timestep in range(curr['timestep'],list(table)[-1]):
-            #         for cons in table[timestep]:
-            #             if cons['loc'] == [goal_loc]:
-            #                 no_future_goalConstraint = False
-            #     if no_future_goalConstraint:
-            #         return get_path(curr)
-            # else:
-            #     if no_future_goalConstraint == True:
-            #         return get_path(curr)
-            
+
         for dir in range(5):
             child_loc = move(curr['loc'], dir)
             if child_loc[0]<0 or child_loc[0]>= len(my_map) or child_loc[1]<0 or child_loc[1]>=len(my_map[0]):

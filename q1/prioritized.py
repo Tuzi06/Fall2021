@@ -39,29 +39,29 @@ class PrioritizedPlanningSolver(object):
             #  'loc':[(1,2),(1,3)],
             #  'timestep':1}
             
-            #1.4
-             {'agent': 0, 
-              'loc': [(1, 5)], 
-              'timestep': 10
-              }
+            # 1.4
+            #  {'agent': 0, 
+            #   'loc': [(1, 5)], 
+            #   'timestep': 10
+            #   }
             
             # # 1.5
-            # {'agent':1,
-            #  'loc':[(1,2)],
-            #  'timestep':1
-            # },
-            # {'agent':1,
-            #  'loc':[(1,3)],
-            #  'timestep':2
-            # },
-            # {'agent':1,
-            #  'loc':[(1,3),(1,2)],
-            #  'timestep':2
-            # },
-            # {'agent':1,
-            #  'loc':[(1,3),(1,4)],
-            #  'timestep':2
-            # },
+            {'agent':1,
+             'loc':[(1,2)],
+             'timestep':1
+            },
+            {'agent':1,
+             'loc':[(1,3)],
+             'timestep':2
+            },
+            {'agent':1,
+             'loc':[(1,3),(1,2)],
+             'timestep':2
+            },
+            {'agent':1,
+             'loc':[(1,3),(1,4)],
+             'timestep':2
+            },
             
             #2.4
             # {'agent':1,

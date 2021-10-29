@@ -147,21 +147,16 @@ class PrioritizedPlanningSolver(object):
                     constraints.append({'agent':j,
                                         'loc':[path[l]],
                                         'timestep':l})
-            
             # 2.2               
                     constraints.append({'agent':i+1,
                                         'loc':[path[l],path[l-1]],
                                         'timestep':l})
-            # # # 2.3   
-                
+            # 2.3   
                 while True:
                     next_path =a_star(self.my_map, self.starts[j], self.goals[j], self.heuristics[j], 
                                       j, constraints)
-                    print(next_path)
-                    
+                    print(next_path) 
                     # 2.4
-                    # if len(next_path) > longest_path*4:
-                    #     raise BaseException('No solutions')
                     meet =0
                     for m in range(longest_path-1,len(next_path)-1):
                         for n in range(longest_path+1,len(next_path)-1):
@@ -171,15 +166,12 @@ class PrioritizedPlanningSolver(object):
                                 raise BaseException('No solutions')
                            
                     if path[-1] in next_path:
-        
                         constraints.append({'agent':j,
                                             'loc':[path[-2]],
                                             'timestep':next_path.index(path[-1])})  
                         constraints.append({'agent':j,
                                             'loc':[path[-1]],
                                             'timestep':next_path.index(path[-1])})
-
-                        
                     else:
                         break
                     
