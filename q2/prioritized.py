@@ -123,7 +123,7 @@ class PrioritizedPlanningSolver(object):
         ]
         # 2.4
         longest_path =0
-        meet_same_edge =3
+        meet_same_edge =10
         for i in range(self.num_of_agents):  # Find path for each agent
             path = a_star(self.my_map, self.starts[i], self.goals[i], self.heuristics[i],
                           i, constraints)
@@ -148,14 +148,13 @@ class PrioritizedPlanningSolver(object):
                                         'loc':[path[l]],
                                         'timestep':l})
             # 2.2               
-                    constraints.append({'agent':i+1,
+                    constraints.append({'agent':j,
                                         'loc':[path[l],path[l-1]],
                                         'timestep':l})
             # 2.3   
                 while True:
                     next_path =a_star(self.my_map, self.starts[j], self.goals[j], self.heuristics[j], 
-                                      j, constraints)
-                    print(next_path) 
+                                      j, constraints) 
                     # 2.4
                     meet =0
                     for m in range(longest_path-1,len(next_path)-1):
@@ -176,7 +175,6 @@ class PrioritizedPlanningSolver(object):
                         break
                     
             
-        print(constraints)
         self.CPU_time = timer.time() - start_time
 
         print("\n Found a solution! \n")

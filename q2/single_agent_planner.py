@@ -140,8 +140,8 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
         #     return get_path(curr)
         #############################
         # Task 1.4: Adjust the goal test condition to handle goal constraints
-         if curr['loc'] == goal_loc:
-                no_future_goalConstraint = True
+        if curr['loc'] == goal_loc:
+            no_future_goalConstraint = True
             for timestep in table:
                 if timestep >curr['timestep']:
                     for cons in table[timestep]:
