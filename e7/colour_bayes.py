@@ -74,7 +74,7 @@ def main(infile):
     X = data[['R','G','B']]/255 # array with shape (n, 3). Divide by 255 so components are all 0-1.
     y = data['Label'] # array with shape (n,) of colour words.
     # TODO: build model_rgb to predict y from X.
-    X_train, X_test, y_train, y_test = train_test_split(X, y)
+    X_train, X_test, y_train, y_test = train_test_split(X.values, y)
     
     model_rgb =  GaussianNB()
     model_rgb.fit(X_train, y_train)
