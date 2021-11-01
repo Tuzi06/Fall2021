@@ -156,11 +156,9 @@ class PrioritizedPlanningSolver(object):
                                         'timestep':l,
                                         'positive':False})
             # 2.3   
-                
                 while True:
                     next_path =a_star(self.my_map, self.starts[j], self.goals[j], self.heuristics[j], 
                                       j, constraints)
-                    
                     # 2.4
                     meet =0
                     for m in range(longest_path-1,len(next_path)-1):
@@ -182,8 +180,6 @@ class PrioritizedPlanningSolver(object):
                                             'timestep':next_path.index(path[-1]),
                                             'positive':False
                                             })
-
-                        
                     else:
                         break
                     
