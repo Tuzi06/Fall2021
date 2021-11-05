@@ -1,0 +1,2 @@
+1.  KNN get the highest score in three classifier, as you can choose how many neighbours point tyo compare with which 9 points seems get the highest score. And as RGB/LAB/HSV has different system to reperesent colour, for exampel RGB use three indepedent parts R,G,B to show a colour, which fit  Naïve Bayes, as all three components are independent.
+2.  It is making reasonabe mistakes, as there may have cities that have similar weather. Adding more features such as average temperature may help to make better prediction.
