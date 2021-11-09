@@ -22,9 +22,20 @@ observation_schema = types.StructType([
 def main(in_directory, out_directory):
 
     weather = spark.read.csv(in_directory, schema=observation_schema)
-
     # TODO: finish here.
-
+    
+    weather = weather.filter(weather.qflag.isNull())
+    weather = weather.filter(weather.station.startswith('CA'))
+    cleaned_data = weather.filter(weather.observation == 'TMAX')
+    
+    cleaned_data= cleaned_data.withColumn('tmax', cleaned_data.value/10)
+    
+    cleaned_data = cleaned_data.select(
+        cleaned_data['station'],
+        cleaned_data['date'],
+        cleaned_data['tmax']
+    )
+    
     cleaned_data.write.json(out_directory, compression='gzip', mode='overwrite')
 
 
