@@ -1,0 +1,8 @@
+1.  the reddit-0 data set and effectively no work:	        0m9.900s
+    no schema specified and not caching:                    0m21.594s
+    with a schema but not caching:                          0m15.129s
+    with both a schema and caching the twice-used DataFrame:0m13.526s
+
+2.  The most of time is taken in reading files, if we use only schema or  both schema and caching. If we do not use neither schema nor caching, then the most of time is taken in calculation.
+
+3.  I used before groupby(). as data will not be changed any more.
