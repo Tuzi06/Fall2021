@@ -50,8 +50,8 @@ def main(in_directory, out_directory):
     averages_by_subreddit.write.csv(out_directory + '-subreddit', mode='overwrite')
     averages_by_score.write.csv(out_directory + '-score', mode='overwrite')
 
-
 if __name__=='__main__':
     in_directory = sys.argv[1]
     out_directory = sys.argv[2]
+    print('adsfasdf')
     main(in_directory, out_directory)
