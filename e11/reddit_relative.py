@@ -57,7 +57,8 @@ def main(in_directory, out_directory):
     best_comments = best_comments.sort('score')
 
     best_author = max_relative_score.join(best_comments, on='subreddit')
-    best_author = best_author.select('subreddit','author','rel_score')
+    best_author=best_author.drop('score')
+    # best_author = best_author.select('subreddit','author','rel_score')
     # best_author = best_author.sort('subreddit')
     best_author.write.json(out_directory, mode='overwrite')
 

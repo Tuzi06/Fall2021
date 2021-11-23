@@ -1,7 +1,7 @@
 import sys
 from pyspark.sql import SparkSession, functions, types, Row
 import re
-
+import math
 spark = SparkSession.builder.appName('correlate logs').getOrCreate()
 spark.sparkContext.setLogLevel('WARN')
 
@@ -40,10 +40,30 @@ def create_row_rdd(in_directory):
 
 def main(in_directory):
     logs = spark.createDataFrame(create_row_rdd(in_directory))
-
     # TODO: calculate r.
+    logs = logs.groupBy('hostname')
+    num_request = logs.count()
+    sum_bytes = logs.agg(functions.sum('num_bytes').alias('sum_bytes'))
+    log = num_request.join(sum_bytes,'hostname')
+    
+    n = log.count()
 
-    r = 0 # TODO: it isn't zero.
+    log = log.select(
+        log['count'].alias('xi'),
+        log['sum_bytes'].alias('yi'),
+        (log['count']*log['count']).alias('xi^2'),
+        (log['sum_bytes']*log['sum_bytes']).alias('yi^2'),
+        (log['count']*log['sum_bytes']).alias('xiyi')
+    )
+
+    xi = log.agg(functions.sum('xi')).first()[0]
+    yi = log.agg(functions.sum('yi')).first()[0]
+    xi2 = log.agg(functions.sum('xi^2')).first()[0]
+    yi2 = log.agg(functions.sum('yi^2')).first()[0]
+    xiyi = log.agg(functions.sum('xiyi')).first()[0]
+
+    r = (n*xiyi-xi*yi)/((math.sqrt(n*xi2-xi**2))*(math.sqrt(n*yi2-yi**2)))
+    # r = 0 # TODO: it isn't zero.
     print("r = %g\nr^2 = %g" % (r, r**2))
 
 
