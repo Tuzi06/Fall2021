@@ -55,12 +55,12 @@ def main(in_directory):
         (log['sum_bytes']*log['sum_bytes']).alias('yi^2'),
         (log['count']*log['sum_bytes']).alias('xiyi')
     )
-
-    xi = log.agg(functions.sum('xi')).first()[0]
-    yi = log.agg(functions.sum('yi')).first()[0]
-    xi2 = log.agg(functions.sum('xi^2')).first()[0]
-    yi2 = log.agg(functions.sum('yi^2')).first()[0]
-    xiyi = log.agg(functions.sum('xiyi')).first()[0]
+    log = log.groupBy()
+    xi = log.sum('xi').first()[0]
+    yi = log.sum('yi').first()[0]
+    xi2 = log.sum('xi^2').first()[0]
+    yi2 = log.sum('yi^2').first()[0]
+    xiyi = log.sum('xiyi').first()[0]
 
     r = (n*xiyi-xi*yi)/((math.sqrt(n*xi2-xi**2))*(math.sqrt(n*yi2-yi**2)))
     # r = 0 # TODO: it isn't zero.
