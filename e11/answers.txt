@@ -1,0 +1,5 @@
+1.  I use .cache() at where I did last week ( after groups.agg(), and before average_collection.groupby('subreddit'). If I hadn't canched those avlues, the run time would be longer, as spark will recalculate them when they need use for the second time.
+2.  Without broadcast(): 30s
+    With broadcast(): 13s
+
+    

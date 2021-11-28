@@ -41,22 +41,21 @@ def main(in_directory, out_directory):
     groups=comments.groupBy('subreddit')
     averages = groups.agg(functions.avg(comments['score'])).cache()
     
-    averages = averages.cache()
-    
     averages = averages. filter(averages['avg(score)']>0)
 
-    average_collection = averages.join(comments, on = 'subreddit')
-    average_collection = average_collection.withColumn('rel_score',average_collection['score']/average_collection['avg(score)'])
+    average_collection = averages.join(functions.broadcast(comments), on = 'subreddit')
+    # average_collection = averages.join(comments, on = 'subreddit')
+    average_collection = average_collection.withColumn('rel_score',average_collection['score']/average_collection['avg(score)']).cache()
     
-    max_relative_score = average_collection.groupby('subreddit').agg(functions.max(average_collection['rel_score']).alias('rel_score')).cache()
-    
-    # max_relative_score.write.json(out_directory, mode='overwrite')
+    max_relative_score = average_collection.groupby('subreddit').agg(functions.max(average_collection['rel_score']).alias('rel_score'))
 
-    best_comments = comments.groupby('subreddit').agg(functions.max('score').alias('score')).cache()
-    best_comments = best_comments.join(comments, on =['subreddit','score'])
+    best_comments = comments.groupby('subreddit').agg(functions.max('score').alias('score'))
+    best_comments = best_comments.join(functions.broadcast(comments), on =['subreddit','score'])
+    # best_comments = best_comments.join(comments, on =['subreddit','score'])
     best_comments = best_comments.sort('score')
 
-    best_author = max_relative_score.join(best_comments, on='subreddit')
+    best_author = best_comments.join(functions.broadcast(max_relative_score), on='subreddit')
+    # best_author = best_comments.join(max_relative_score, on='subreddit')
     best_author = best_author.select('subreddit','author','rel_score')
     best_author.write.json(out_directory, mode='overwrite')
 
