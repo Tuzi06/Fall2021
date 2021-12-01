@@ -83,6 +83,7 @@ def output_gpx(points, output_filename):
 
 def main():
     points = get_data(sys.argv[1])
+    print(points)
     print('Unfiltered distance: %0.2f' % (distance(points),))
     
     smoothed_points = smooth(points)
