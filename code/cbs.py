@@ -240,10 +240,12 @@ class CBSSolver(object):
             p = self.pop_node()
             if p['collisions'] == []:
                 self.print_results(p)
+                for pa in p['paths']:
+                    print(pa)
                 return p['paths']
             collision = p['collisions'].pop(0)
-            # constraints = standard_splitting(collision)
-            constraints = disjoint_splitting(collision)
+            constraints = standard_splitting(collision)
+            # constraints = disjoint_splitting(collision)
             for constraint in constraints:
                 q = {'cost':0,
                     'constraints': [constraint],
