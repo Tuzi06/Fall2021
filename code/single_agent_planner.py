@@ -156,6 +156,7 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
     earliest_goal_timestep = 0
     h_value = h_values[start_loc]
     table = build_constraint_table(constraints,agent)
+    
     root = {'loc': start_loc, 'g_val': 0, 'h_val': h_value, 'parent': None,'timestep':0}
     push_node(open_list, root)
     closed_list[(root['loc'],root['timestep'])] = root
@@ -173,36 +174,35 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
                         if cons['loc'] == [goal_loc] and cons['positive']==False:
                             no_future_goalConstraint =False
             if no_future_goalConstraint:
+                print(get_path(curr))
                 return get_path(curr)
-            
-        continue_flag = False
-        for d in range(5):
-            child_loc = move(curr['loc'], d)
-            if is_constrained(curr['loc'],child_loc,curr['timestep']+1,table)==1:
-                child = {'loc': child_loc,
-                    'g_val': curr['g_val'] + 1,
-                    'h_val': h_values[child_loc],
-                    'parent': curr,
-                    'timestep':curr['timestep']+1
-                    }     
-                if child_loc[0]<0 or child_loc[0]>= len(my_map) or child_loc[1]<0 or child_loc[1]>=len(my_map[0]):
-                    continue
-                if my_map[child_loc[0]][child_loc[1]]:
-                    continue
-                if (child['loc'],child['timestep']) in closed_list:
-                    existing_node = closed_list[(child['loc'],child['timestep'])]
-                    if compare_nodes(child, existing_node):
-                        closed_list[(child['loc'],child['timestep'])] = child
-                        push_node(open_list, child)
-                else:
-                    closed_list[(child['loc'],child['timestep'])] = child
-                    push_node(open_list, child)    
-                continue_flag=True    
-                break      
+         # continue_flag = False
+        # for d in range(5):
+        #     child_loc = move(curr['loc'], d)
+        #     if is_constrained(curr['loc'],child_loc,curr['timestep']+1,table)==1:
+        #         child = {'loc': child_loc,
+        #             'g_val': curr['g_val'] + 1,
+        #             'h_val': h_values[child_loc],
+        #             'parent': curr,
+        #             'timestep':curr['timestep']+1
+        #             }     
+        #         if child_loc[0]<0 or child_loc[0]>= len(my_map) or child_loc[1]<0 or child_loc[1]>=len(my_map[0]):
+        #             continue
+        #         if my_map[child_loc[0]][child_loc[1]]:
+        #             continue
+        #         if (child['loc'],child['timestep']) in closed_list:
+        #             existing_node = closed_list[(child['loc'],child['timestep'])]
+        #             if compare_nodes(child, existing_node):
+        #                 closed_list[(child['loc'],child['timestep'])] = child
+        #                 push_node(open_list, child)
+        #         else:
+        #             closed_list[(child['loc'],child['timestep'])] = child
+        #             push_node(open_list, child)    
+        #         continue_flag=True    
+        #         break      
         
-        if continue_flag:
-            continue
-        
+        # if continue_flag:
+        #     continue
         for dir in range(5):
             child_loc = move(curr['loc'], dir)
             if child_loc[0]<0 or child_loc[0]>= len(my_map) or child_loc[1]<0 or child_loc[1]>=len(my_map[0]):
@@ -215,7 +215,6 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
                     'parent': curr,
                     'timestep':curr['timestep']+1
                     }         
-            
             if is_constrained(curr['loc'],child_loc,curr['timestep']+1,table)==0:
                 continue
             
@@ -227,4 +226,37 @@ def a_star(my_map, start_loc, goal_loc, h_values, agent, constraints):
             else:
                 closed_list[(child['loc'],child['timestep'])] = child
                 push_node(open_list, child)   
-    return None  # Failed to find solutions
+    return None  # Failed to find solutions  
+    
+    
+    
+    
+    
+    
+    # continue_flag = False
+        # for d in range(5):
+        #     child_loc = move(curr['loc'], d)
+        #     if is_constrained(curr['loc'],child_loc,curr['timestep']+1,table)==1:
+        #         child = {'loc': child_loc,
+        #             'g_val': curr['g_val'] + 1,
+        #             'h_val': h_values[child_loc],
+        #             'parent': curr,
+        #             'timestep':curr['timestep']+1
+        #             }     
+        #         if child_loc[0]<0 or child_loc[0]>= len(my_map) or child_loc[1]<0 or child_loc[1]>=len(my_map[0]):
+        #             continue
+        #         if my_map[child_loc[0]][child_loc[1]]:
+        #             continue
+        #         if (child['loc'],child['timestep']) in closed_list:
+        #             existing_node = closed_list[(child['loc'],child['timestep'])]
+        #             if compare_nodes(child, existing_node):
+        #                 closed_list[(child['loc'],child['timestep'])] = child
+        #                 push_node(open_list, child)
+        #         else:
+        #             closed_list[(child['loc'],child['timestep'])] = child
+        #             push_node(open_list, child)    
+        #         continue_flag=True    
+        #         break      
+        
+        # if continue_flag:
+        #     continue

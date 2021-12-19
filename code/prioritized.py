@@ -1,6 +1,6 @@
 import time as timer
 from single_agent_planner import compute_heuristics, a_star, get_sum_of_cost
-
+from multi_agent_planner import ma_star
 
 class PrioritizedPlanningSolver(object):
     """A planner that plans for each robot sequentially."""
@@ -127,8 +127,12 @@ class PrioritizedPlanningSolver(object):
         longest_path =0
         meet_same_edge =3
         for i in range(self.num_of_agents):  # Find path for each agent
-            path = a_star(self.my_map, self.starts[i], self.goals[i], self.heuristics[i],
-                          i, constraints)
+            if i == 1:
+                path = ma_star(self.my_map, self.starts, self.goals, self.heuristics,
+                            [i], constraints)
+            else:
+                path = a_star(self.my_map, self.starts[i], self.goals[i], self.heuristics[i],
+                            i, constraints)
             if path is None:
                 raise BaseException('No solutions')
             result.append(path)
@@ -156,9 +160,12 @@ class PrioritizedPlanningSolver(object):
                                         'timestep':l,
                                         'positive':False})
             # 2.3   
+                print(constraints)
                 while True:
-                    next_path =a_star(self.my_map, self.starts[j], self.goals[j], self.heuristics[j], 
-                                      j, constraints)
+                    next_path =ma_star(self.my_map, self.starts, self.goals, self.heuristics, 
+                                      [j], constraints)
+                    # next_path =a_star(self.my_map, self.starts[j], self.goals[j], self.heuristics[j], 
+                                    #   j, constraints)
                     # 2.4
                     meet =0
                     for m in range(longest_path-1,len(next_path)-1):

@@ -2,7 +2,7 @@ import time as timer
 import heapq
 import random
 from single_agent_planner import compute_heuristics, a_star, get_location, get_sum_of_cost
-
+from multi_agent_planner import ma_star
 
 def detect_collision(path1, path2):
     ##############################
@@ -208,8 +208,10 @@ class CBSSolver(object):
                 'paths': [],
                 'collisions': []}
         for i in range(self.num_of_agents):  # Find initial path for each agent
-            path = a_star(self.my_map, self.starts[i], self.goals[i], self.heuristics[i],
-                          i, root['constraints'])
+            # path = a_star(self.my_map, self.starts[i], self.goals[i], self.heuristics[i],i, root['constraints'])
+            path = ma_star(self.my_map, self.starts, self.goals, self.heuristics,[i], root['constraints'])
+            if len(path) ==1:
+                path = path[0]
             if path is None:
                 raise BaseException('No solutions')
             root['paths'].append(path)
@@ -219,12 +221,12 @@ class CBSSolver(object):
         self.push_node(root)
 
         # Task 3.1: Testing
-        print(root['collisions'])
+        # print(root['collisions'])
 
         # Task 3.2: Testing
-        for collision in root['collisions']:
-            # print(standard_splitting(collision))
-            print(disjoint_splitting(collision),'\n\n')
+        # for collision in root['collisions']:
+        #     print(standard_splitting(collision))
+            # print(disjoint_splitting(collision),'\n\n')
 
 
         ##############################
@@ -237,6 +239,9 @@ class CBSSolver(object):
         #           Ensure to create a copy of any objects that your child nodes might inherit
         
         while len(self.open_list) > 0:
+            if self.num_of_generated > 20:
+                print('reached maximum number of nodes. Returning...')
+                return None
             p = self.pop_node()
             if p['collisions'] == []:
                 self.print_results(p)
@@ -259,8 +264,12 @@ class CBSSolver(object):
                     q['paths'].append(pa)
                 
                 ai = constraint['agent']
+                path = ma_star(self.my_map,self.starts, self.goals,self.heuristics,[ai],q['constraints'])
+                print(path)
                 path = a_star(self.my_map,self.starts[ai], self.goals[ai],self.heuristics[ai],ai,q['constraints'])
-                
+                print(path)
+                # if len(path) == 1:
+                #     path = path[0]
                 if path is not None:
                     q['paths'][ai]= path
                     # task 4
@@ -268,7 +277,10 @@ class CBSSolver(object):
                     if constraint['positive']:
                         vol = paths_violate_constraint(constraint,q['paths'])
                         for v in vol:
-                            path_v = a_star(self.my_map,self.starts[v], self.goals[v],self.heuristics[v],v,q['constraints'])
+                            # path_v = a_star(self.my_map,self.starts[v], self.goals[v],self.heuristics[v],v,q['constraints'])
+                            path_v = ma_star(self.my_map,self.starts, self.goals,self.heuristics,[],q['constraints'])
+                            if len(path_v) == 1:
+                                path_v = path_v[0]
                             if path_v  is None:
                                 continue_flag =True
                             else:
