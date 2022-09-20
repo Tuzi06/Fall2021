@@ -1,0 +1,6 @@
+1.  As the two graphs of the orginial data for weekdays and weekends both shows there is slightly right-skewed.
+    So it is better to use sqrt or log to do the transformation. sqrt gives a closer result for both p>0.05, which one is greater than 0.05 and another one is slightly less than 0.05.
+2.  For the original T-test, it tests that the original question, which is whether there are a different number of Reddit comments posted on weekdays than on weekends.
+    And transformed data T-test tests that whether the normalized data can tell a difference between weekdays and weekend
+3.  I think the by-week test has the best result for answering the question. As it is the only test which pass the normal test, and it use the number of comment by week to compare between weekdays and weekends, which can be said that the data has more persuasiveness than other tests.
+4.  The mean of two set of data shows that on weekdays there are more comments. But as two set has different volumes of data( weekdays have almost twice more rows than weekends), it can not conclude which one is really on average is more than the other.

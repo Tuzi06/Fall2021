@@ -1,0 +1,5 @@
+1.  Pandas is easier to work with and easier to read, as numpy presents in array(no labels in the ouput), Pandas presents reuslt in the DataFrame (with labels),which is more readable.
+2.  Running time for pivot_months_pandas: 14.7 ms ± 377 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+    Running time for pivot_months_loops:  502 ms ± 4.81 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+    As python standard libraries are slow in processing data, and with loop ( for loop in the function), and as standard python using memory unefficiently, the processing time will be much longer.
+    With pandas, data store in a collection of numpy array, which is faster to access the data in the array, processing data by using pandas functions, which is faster than using python loops.

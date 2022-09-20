@@ -1,0 +1,26 @@
+
+
+	    mean_x 	    mean_y 	    std_x 	    std_y   	x_range 	        y_range 	    correlation_coefficient
+data1 	8.717696 	12.522874 	12.155517 	6.639964 	[-22.64, 35.24] 	[-2.57, 27.38] 	0.950326
+Description: There is a positive linear correlation between x and y.
+
+  	    mean_x  	mean_y 	    std_x 	    std_y   	x_range 	        y_range 	        correlation_coefficient
+data2 	-0.710787 	-0.748987 	11.481584 	6.257918 	[-33.27, 27.65] 	[-18.62, 14.15] 	0.955153
+Description: There is a positive linear correlation between x and y, and most of the data are in the middle part of range with a couple points are on the each end.
+
+
+	    mean_x 	    mean_y 	    std_x 	    std_y 	    x_range 	    y_range 	    correlation_coefficient
+data3 	0.968907 	8.508535 	2.235558 	1.149301 	[-2.45, 4.52] 	[6.64, 10.55] 	0.981937
+Description: There is a positive correlation between x and y, but data is divided into four groups.
+
+	    mean_x 	    mean_y 	    std_x   	std_y   	x_range     	y_range 	    correlation_coefficient
+data4 	49.905086 	18.553837 	28.508611 	16.545896 	[0.0, 87.38] 	[0.0, 44.57] 	-0.081193
+Description: This set of data shows a SFU logo
+
+  	    mean_x  	mean_y 	    std_x 	    std_y 	    x_range 	    y_range 	    correlation_coefficient
+data5 	49.909994 	18.555525 	28.500001 	16.540796 	[4.34, 91.05] 	[0.06, 49.93] 	-0.088236
+Description: The data shows four vertical lines and is apart from the neighbours at a distance of about 20 on x-axis.
+
+ 	    mean_x 	    mean_y 	    std_x   	std_y   	x_range 	    y_range 	        correlation_coefficient
+data6 	7.216155 	7.602215 	11.921599 	11.764382 	[-24.33, 35.4] 	[-22.96, 36.08] 	0.935069
+Description: This set of data shows a almost prefect y = x linear function with only two points that are not on the line.
